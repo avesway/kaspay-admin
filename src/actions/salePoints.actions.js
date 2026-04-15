@@ -11,6 +11,7 @@ export async function getListSalePoints(salePointId) {
       if (salePointId) setActiveSalePoint(res.items.find((item) => item.id === salePointId));
       setSalePoints(res.items);
       updatePagination({ totalItems: res.totalItems, totalPages: res.totalPages });
+      setError({ list: false });
       return res.items;
     })
     .catch((err) => {

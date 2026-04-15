@@ -6,6 +6,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useNavigate } from 'react-router';
 import { getListSalePoints } from '@/actions/salePoints.actions';
 import { ROUTES } from '@/constants';
+import { CircleAlert, Loader2 } from 'lucide-react';
 
 const columnsSalePoints = [
   {
@@ -68,9 +69,7 @@ const SalePointsList = () => {
   const goSalePoint = (row) => {
     setActiveSalePoint(row.original);
 
-    navigate(`${ROUTES.SALE_POINTS}/${row.original.id}`, {
-      state: { salePoint: row.original },
-    });
+    navigate(`${ROUTES.SALE_POINTS}/${row.original.id}`);
   };
 
   return (
@@ -79,7 +78,18 @@ const SalePointsList = () => {
         <CardTitle className="flex items-center gap-2 text-2xl">Список торговых точек</CardTitle>
       </CardHeader>
       <CardContent>
-        <AppTable data={salePoints} columns={columnsSalePoints} onClick={goSalePoint} isClickable />
+        {loading.list ? (
+          <div className="mt-5 flex justify-center">
+            <Loader2 className="animate-spin" color="var(--color-primary)" />
+          </div>
+        ) : error.list ? (
+          <div className="mt-5 flex gap-3 justify-center">
+            <CircleAlert color="var(--color-destructive)" />
+            <p className="text-destructive">Ошибка получения торговых точек</p>
+          </div>
+        ) : (
+          <AppTable data={salePoints} columns={columnsSalePoints} onClick={goSalePoint} isClickable />
+        )}
       </CardContent>
     </Card>
   );

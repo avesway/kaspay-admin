@@ -1,19 +1,22 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { useLocation, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { Button } from '@/shared/ui/button';
-import { ArrowLeft } from 'lucide-react';
-import SalePointOperations from './components/SalePointOperations';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { getListSalePoints } from '@/actions/salePoints.actions';
-import SalePointsOperationsFilter from './components/SalePointsOperationsFilter';
+import DevicesList from '../devices/components/DevicesList';
+import { useSalePointsStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
 
 function SalePointDetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
+  const { salePoints, activeSalePoint } = useSalePointsStore(
+    useShallow((state) => ({ salePoints: state.salePoints, activeSalePoint: state.activeSalePoint })),
+  );
 
   useEffect(() => {
-    if (id) getListSalePoints(id);
+    if (id && !salePoints.length) getListSalePoints(id);
   }, [id]);
 
   return (
@@ -23,11 +26,12 @@ function SalePointDetailsPage() {
           <ArrowLeft />
           Назад
         </Button>
-        <h1 className="text-3xl font-bold">Объекты / {location.state.salePoint.name}</h1>
+        <h1 className="text-3xl font-bold flex flex-row items-center">
+          Объекты / {!activeSalePoint ? <Loader2 className="animate-spin mx-1" /> : activeSalePoint.name}
+        </h1>
       </div>
 
-      <SalePointsOperationsFilter />
-      <SalePointOperations />
+      <DevicesList />
     </div>
   );
 }
