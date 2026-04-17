@@ -14,6 +14,7 @@ import { useAccountStore } from '@/store';
 import { authAPI } from '@/api/auth.api';
 import { toast } from 'sonner';
 import { ENV, ROUTES } from '@/constants';
+import { SidebarTrigger } from './ui/sidebar';
 
 const AppHeader = () => {
   const navigate = useNavigate();
@@ -34,11 +35,14 @@ const AppHeader = () => {
       });
   };
 
+  console.log('account', account);
+
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center justify-end gap-4 border-b bg-card px-6">
-      <div className="flex items-center gap-3">
+    <header className="sticky top-0 z-10 flex h-16 items-center justify-between gap-4 border-b bg-card px-6">
+      <div className="flex w-full justify-between items-center gap-3">
+        <SidebarTrigger />
         <DropdownMenu>
-          <DropdownMenuTrigger className="cursor-pointer" asChild>
+          <DropdownMenuTrigger className="cursor-pointer ml-auto" asChild>
             <Button variant="ghost" size="icon">
               <User className="h-5 w-5" />
             </Button>

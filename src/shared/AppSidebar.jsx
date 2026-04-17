@@ -6,7 +6,7 @@ import SvgLogo from './SvgLogo';
 
 const AppSidebar = () => {
   return (
-    <Sidebar>
+    <Sidebar collapsible="offcanvas">
       <SidebarHeader>
         <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-6">
           <SvgLogo size={30} />

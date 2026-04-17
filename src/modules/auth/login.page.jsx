@@ -5,7 +5,7 @@ import SvgLogo from '@/shared/SvgLogo';
 //type="image/svg+xml"
 function AuthPage() {
   return (
-    <Card className="w-[30%]">
+    <Card className="w-[30%] max-2xl:w-[60%] max-lg:w-[90%]">
       <div className="flex items-center justify-center flex-col">
         <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-6">
           <SvgLogo size={50} />

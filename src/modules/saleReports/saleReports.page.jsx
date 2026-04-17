@@ -20,7 +20,7 @@ function SalesPage() {
       <StatisticsFilter />
       <StatisticsSales isFilter={true} />
 
-      <div className="flex flex-row justify-between mt-10">
+      <div className="flex flex-row flwx-wrap justify-between mt-10 max-lg:flex-col max-lg:gap-5">
         <StatisticsOrdersDays />
         <StatisticsOrdersTopProducts />
       </div>

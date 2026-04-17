@@ -23,8 +23,8 @@ const ProductsExpiredList = () => {
   return (
     <Card className="mt-10">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-2xl">
-          <AlertTriangle className="h-5 w-5 text-destructive" />
+        <CardTitle className="flex items-center gap-2 text-2xl max-sm:text-xl max-sm:flex-col max-sm:gap-3">
+          <AlertTriangle className="h-5 w-5 text-destructive max-sm:h-7 max-sm:w-7" />
           Товары с истекающим сроком годности (≤2 дня)
         </CardTitle>
         <div className="text-sm text-muted-foreground"></div>

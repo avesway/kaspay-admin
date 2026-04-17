@@ -19,10 +19,10 @@ const StatisticsFilter = () => {
 
   return (
     <Card className="my-10">
-      <CardContent className="p-6 flex flex-row justify-between">
+      <CardContent className="p-6 flex flex-row justify-between max-sm:flex-col max-sm:gap-3">
         <Popover open={openDateFrom} onOpenChange={setOpenDateFrom}>
           <PopoverTrigger asChild>
-            <div className="w-[30%]">
+            <div className="w-[30%] max-sm:w-full">
               <Label className="mb-3">Период c:</Label>
               <Button variant="outline" id="date" className="w-full justify-start">
                 <CalendarIcon className="mr-2 h-4 w-4" />
@@ -46,7 +46,7 @@ const StatisticsFilter = () => {
 
         <Popover open={openDateTo} onOpenChange={setOpenDateTo}>
           <PopoverTrigger asChild>
-            <div className="w-[30%]">
+            <div className="w-[30%] max-sm:w-full">
               <Label className="mb-3">Период по:</Label>
               <Button variant="outline" id="date" className="w-full justify-start">
                 <CalendarIcon className="mr-2 h-4 w-4" />
@@ -68,7 +68,7 @@ const StatisticsFilter = () => {
           </PopoverContent>
         </Popover>
 
-        <div className="w-[30%]">
+        <div className="w-[30%] max-sm:w-full">
           <Label className="mb-3">Объект</Label>
           <Select value={statisticFilter.salePointIds} onValueChange={(e) => updateStatisticsFilter({ salePointIds: +e })}>
             <SelectTrigger className="w-full">

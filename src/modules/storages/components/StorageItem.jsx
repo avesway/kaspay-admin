@@ -9,7 +9,7 @@ const StorageItem = ({ storage, loading }) => {
   const statisticStorageRemainingProducts = useSaleReportsStore((state) => state.statisticStorageRemainingProducts);
 
   return (
-    <Card className="w-[30%]">
+    <Card className="w-[30%] max-sm:w-full">
       {loading ? (
         <Skeleton className="w-full h-20 bg-gray-60 shadow-primary p-5 rounded-2xl" />
       ) : (

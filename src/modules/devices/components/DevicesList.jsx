@@ -46,7 +46,7 @@ const DevicesList = () => {
         ) : (
           devices.map((device) => (
             <Card
-              className="w-[48%] h-auto py-5 mb-5 cursor-pointer duration-200 hover:shadow-chart-5"
+              className="w-[48%] h-auto py-5 mb-5 cursor-pointer duration-200 hover:shadow-chart-5 max-sm:w-full"
               key={device.id}
               onClick={() => goDevice(device)}
             >

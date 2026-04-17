@@ -21,7 +21,7 @@ const StatisticsOrdersDays = () => {
   );
 
   return (
-    <Card className="w-[49%]">
+    <Card className="w-[49%] max-lg:w-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-2xl">Продажи по дням</CardTitle>
       </CardHeader>

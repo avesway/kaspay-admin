@@ -21,12 +21,12 @@ function SalePointDetailsPage() {
 
   return (
     <div className="">
-      <div className="flex flex-items gap-5">
+      <div className="flex flex-items gap-5 max-sm:flex-col max-sm:gap-5">
         <Button variant="outline" onClick={() => navigate(-1)}>
           <ArrowLeft />
           Назад
         </Button>
-        <h1 className="text-3xl font-bold flex flex-row items-center">
+        <h1 className="text-3xl font-bold flex flex-row items-center max-sm:text-xl">
           Объекты / {!activeSalePoint ? <Loader2 className="animate-spin mx-1" /> : activeSalePoint.name}
         </h1>
       </div>

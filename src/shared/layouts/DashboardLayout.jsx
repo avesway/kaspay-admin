@@ -8,7 +8,7 @@ const DashboardLayout = () => {
       <AppSidebar />
       <div className="w-[80%] flex flex-col grow h-full">
         <AppHeader />
-        <main className="p-5 h-[90%]">
+        <main className="p-5 h-[90%] overflow-x-auto whitespace-nowrap">
           <Outlet />
         </main>
       </div>

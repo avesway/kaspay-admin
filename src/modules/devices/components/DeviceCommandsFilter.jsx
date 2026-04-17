@@ -16,8 +16,8 @@ const DeviceCommandsFilter = () => {
   const [openDateTo, setOpenDateTo] = useState(false);
 
   return (
-    <Card className="my-3 flex">
-      <CardContent className="flex self-start gap-10 flex-row justify-between">
+    <Card className="my-3 flex ">
+      <CardContent className="flex self-start gap-10 flex-row justify-between max-sm:flex-col max-sm:gap-3">
         <Popover open={openDateFrom} onOpenChange={setOpenDateFrom}>
           <PopoverTrigger asChild>
             <div className="w-64">

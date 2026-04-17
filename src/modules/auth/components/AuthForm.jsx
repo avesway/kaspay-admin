@@ -43,7 +43,7 @@ const AuthForm = () => {
 
   return (
     <Form {...form}>
-      <form className="flex flex-col mt-10 gap-4 w-[50%]" onSubmit={onSubmit}>
+      <form className="flex flex-col mt-10 gap-4 w-[50%] max-md:w-[60%] max-sm:w-[90%]" onSubmit={onSubmit}>
         <FormField
           control={form.control}
           name="login"

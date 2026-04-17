@@ -34,7 +34,7 @@ const DeviceCommandsTypes = () => {
   }, []);
 
   return (
-    <Card className="mt-3 w-[49%]">
+    <Card className="mt-3 w-[49%] max-sm:w-full">
       <CardHeader className="flex items-center gap-2 text-2xl">
         <Terminal className="h-6 w-6 text-primary" />
         <CardTitle className="flex items-center gap-2 text-2xl">Команды на устройство</CardTitle>

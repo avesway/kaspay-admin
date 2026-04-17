@@ -5,9 +5,9 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 
 const Pagination = ({ pagination, setPagination }) => {
   return (
-    <div className="flex items-center justify-end gap-10 mt-10">
+    <div className="flex items-center justify-end gap-10 mt-10 max-sm:flex-col max-sm:gap-3">
       <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">Показать:</span>
+        <span className="text-sm text-muted-foreground max-sm:text-xs">Показать:</span>
         <Select value={pagination.size} onValueChange={(v) => setPagination(v, pagination.page)} className="h-6 w-16">
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Показать" />
@@ -22,11 +22,11 @@ const Pagination = ({ pagination, setPagination }) => {
             </SelectGroup>
           </SelectContent>
         </Select>
-        <span className="text-sm text-muted-foreground">записей</span>
+        <span className="text-sm text-muted-foreground max-sm:text-xs">записей</span>
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">
+        <span className="text-sm text-muted-foreground max-sm:text-xs">
           Страница {pagination.page} из {pagination.totalPages}
         </span>
 
