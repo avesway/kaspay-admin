@@ -1,10 +1,8 @@
-import { refreshToken } from '@/actions/auth.actions';
 import instanceAxios from '@/config/axios';
 
 export const saleReportsAPI = {
   getStatisticsStorageRemainingProducts: async (ids) => {
     try {
-      await refreshToken();
       const response = await instanceAxios.get(`statistics/storages/remaining-products?${ids}`);
 
       return response?.data;
@@ -14,7 +12,6 @@ export const saleReportsAPI = {
   },
   getStatisticsOrdersTotal: async (params = '') => {
     try {
-      await refreshToken();
       const response = await instanceAxios.get(`statistics/orders/total${params}`);
 
       return response?.data;
@@ -24,7 +21,6 @@ export const saleReportsAPI = {
   },
   getStatisticsOrderDays: async (params = '') => {
     try {
-      await refreshToken();
       const response = await instanceAxios.get(`statistics/orders/days${params}`);
 
       return response?.data;
@@ -34,7 +30,6 @@ export const saleReportsAPI = {
   },
   getStatisticsOrderTopProducts: async (params = '') => {
     try {
-      await refreshToken();
       const response = await instanceAxios.get(`statistics/orders/products/total${params}`);
 
       return response?.data;
@@ -44,7 +39,6 @@ export const saleReportsAPI = {
   },
   getStatisticsOrderReceipts: async (params = '') => {
     try {
-      await refreshToken();
       const response = await instanceAxios.get(`statistics/orders/receipts${params}`);
 
       return response?.data;

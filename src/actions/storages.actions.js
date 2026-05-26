@@ -1,10 +1,11 @@
-import { productsAPI } from '@/api/products.api';
+//import { productsAPI } from '@/api/products.api';
 import { storagesAPI } from '@/api/storages.api';
 import { useStoragesStore } from '@/store';
-import { getProductsBalances } from './productsBalances.actions';
 import { toast } from 'sonner';
 import { format, set } from 'date-fns';
 import { priceRoundedKopecks } from '@/helpers/priceHelpers';
+import { getProductsBalances } from '@/modules/products/actions/balances';
+import { productsBalancesAPI } from '@/modules/products';
 
 export async function getListStorages(params = '') {
   const { setStorages, setLoading, setError } = useStoragesStore.getState();
@@ -43,8 +44,8 @@ export async function getListSuppliers() {
 }
 
 export async function productsBalancesMovemenets(productId, data, form, setOpen) {
-  await productsAPI
-    .movingProductBalance(productId, data)
+  await productsBalancesAPI
+    .moving(productId, data)
     .then((res) => {
       getProductsBalances();
       form.reset();

@@ -1,10 +1,8 @@
-import { refreshToken } from '@/actions/auth.actions';
 import instanceAxios from '@/config/axios';
 
 export const devicesAPI = {
   getListDevices: async () => {
     try {
-      await refreshToken();
       const response = await instanceAxios.get(`devices?deviceTypes=terminal`);
 
       return response?.data;
@@ -14,7 +12,6 @@ export const devicesAPI = {
   },
   getEventsDevices: async (params) => {
     try {
-      await refreshToken();
       const response = await instanceAxios.get(`devices/events${params}`);
 
       return response?.data;
@@ -24,7 +21,6 @@ export const devicesAPI = {
   },
   getCommandsDevices: async (params) => {
     try {
-      await refreshToken();
       const response = await instanceAxios.get(`devices/commands${params}`);
 
       return response?.data;
@@ -34,7 +30,6 @@ export const devicesAPI = {
   },
   getCommandsTypesDevices: async () => {
     try {
-      await refreshToken();
       const response = await instanceAxios.get(`devices/commands/types`);
 
       return response?.data;
@@ -44,7 +39,6 @@ export const devicesAPI = {
   },
   sendCommandDevices: async (data) => {
     try {
-      await refreshToken();
       const response = await instanceAxios.post(`devices/commands`, data);
 
       return response?.data;

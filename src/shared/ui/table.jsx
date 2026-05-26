@@ -56,7 +56,7 @@ function TableCell({ className, ...props }) {
     <td
       data-slot="table-cell"
       className={cn(
-        'p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 *:[[role=checkbox]]:translate-y-0.5 text-sm',
+        'p-2 align-middle whitespace-wrap [&:has([role=checkbox])]:pr-0 *:[[role=checkbox]]:translate-y-0.5 text-sm',
         className,
       )}
       {...props}

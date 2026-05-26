@@ -1,7 +1,7 @@
-import { calculationProductPrices } from '@/actions/priceManagment.actions';
-import { updatePriceProductBalance } from '@/actions/productsBalances.actions';
+import { calculationProductPrices } from '../actions/baseProducts';
 import { priceRoundedKopecks } from '@/helpers/priceHelpers';
-import { usePriceManagementStore } from '@/store/priceManagement.store';
+import { updatePriceProductBalance } from '@/modules/products/actions/balances';
+import { usePriceManagementStore } from '../store';
 import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 

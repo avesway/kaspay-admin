@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Loader2, CircleAlert, Terminal } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-import { useDevicesStore } from '@/store';
-import { useShallow } from 'zustand/react/shallow';
-import { getCommandsTypesDevice, sendCommandDevice } from '@/actions/devices.actions';
+import React, { useEffect, useState } from "react";
+import { Loader2, CircleAlert, Terminal } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
+import { useDevicesStore } from "@/store";
+import { useShallow } from "zustand/react/shallow";
+import {
+  getCommandsTypesDevice,
+  sendCommandDevice,
+} from "@/actions/devices.actions";
 import {
   Dialog,
   DialogContent,
@@ -12,8 +15,8 @@ import {
   DialogTitle,
   DialogFooter,
   DialogClose,
-} from '@/shared/ui/dialog';
-import { Button } from '@/shared/ui/button';
+} from "@/shared/ui/dialog";
+import { Button } from "@/shared/ui/button";
 
 const DeviceCommandsTypes = () => {
   const { deviceCommandsTypes, loading, error, activeDevice } = useDevicesStore(
@@ -25,8 +28,8 @@ const DeviceCommandsTypes = () => {
     })),
   );
 
-  const [open, setOpen] = useState('');
-  const [comm, setComm] = useState('');
+  const [open, setOpen] = useState("");
+  const [comm, setComm] = useState("");
   const [activeCommand, setActiveCommand] = useState(null);
 
   useEffect(() => {
@@ -37,7 +40,9 @@ const DeviceCommandsTypes = () => {
     <Card className="mt-3 w-[49%] max-sm:w-full">
       <CardHeader className="flex items-center gap-2 text-2xl">
         <Terminal className="h-6 w-6 text-primary" />
-        <CardTitle className="flex items-center gap-2 text-2xl">Команды на устройство</CardTitle>
+        <CardTitle className="flex items-center gap-2 text-2xl">
+          Команды на устройство
+        </CardTitle>
       </CardHeader>
       <CardContent>
         {loading.commandsTypes ? (
@@ -56,7 +61,12 @@ const DeviceCommandsTypes = () => {
         ) : (
           <div className="flex flex-row flex-wrap gap-3">
             {deviceCommandsTypes
-              .filter((i) => i.name != 'checkDoor' && i.name != 'openDoor' && i.name != 'closeDoor')
+              .filter(
+                (i) =>
+                  i.name != "checkDoor" &&
+                  i.name != "openDoor" &&
+                  i.name != "closeDoor",
+              )
               .map((item) => (
                 <Button
                   key={item.name}
@@ -81,7 +91,8 @@ const DeviceCommandsTypes = () => {
           <DialogHeader>
             <DialogTitle>Команда на устройство</DialogTitle>
             <DialogDescription>
-              Вы действительно хотите отправить на устройство команду "<span className="font-bold text-foreground">{comm}</span>"?
+              Вы действительно хотите отправить на устройство команду "
+              <span className="font-bold text-foreground">{comm}</span>"?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="sm:justify-start mt-5">
@@ -99,6 +110,16 @@ const DeviceCommandsTypes = () => {
                     deviceId: activeDevice.id,
                     description: activeCommand?.description,
                     type: activeCommand?.name,
+                    ...(activeCommand?.name === "executeWsRequest"
+                      ? {
+                          requestBody: {
+                            type: "productDeliveryRequest",
+                            productPositionId: 101,
+                            deliveryLine: 1,
+                            controllerId: 1,
+                          },
+                        }
+                      : {}),
                   },
                   setOpen,
                 )

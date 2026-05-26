@@ -1,72 +1,41 @@
 import { authAPI } from '@/api/auth.api';
+import { isAfter } from 'date-fns';
 import { writeTokenRequest } from '@/config/axios';
-import { ENV, ROUTES } from '@/constants';
-import { useAccountStore } from '@/store';
-import { redirect } from 'react-router';
+import { ENV } from '@/constants';
 
 let refreshTokenPromise = null;
 
-export async function checkAuth() {
-  try {
-    const authTokens = localStorage.getItem(ENV.AUTH_TOKENS);
-    if (!authTokens) return false;
+export async function validateAuthToken() {
+  const authTokens = localStorage.getItem(ENV.AUTH_TOKENS);
+  if (!authTokens) return null;
 
-    const accessToken = JSON.parse(authTokens)?.accessToken;
-    const refreshToken = JSON.parse(authTokens)?.refreshToken;
+  const { accessToken, accessTokenExpiredAt, refreshToken: storedRefreshToken } = JSON.parse(authTokens) ?? {};
+  if (!accessToken || !storedRefreshToken) return null;
 
-    if (!accessToken || !refreshToken) return false;
-    writeTokenRequest(accessToken);
-
-    const { setAccount } = useAccountStore.getState();
-    const user = await authAPI.account();
-    setAccount(user);
-
-    return user;
-  } catch (error) {
-    console.log('Error checkAuth: ', error);
-    return false;
+  if (isAfter(new Date(), new Date(accessTokenExpiredAt))) {
+    const result = await refreshToken(storedRefreshToken);
+    return result;
   }
+
+  return accessToken;
 }
 
-export async function refreshToken() {
-  try {
-    const authTokens = localStorage.getItem(ENV.AUTH_TOKENS);
-    if (!authTokens) return false;
+export async function refreshToken(token) {
+  if (refreshTokenPromise) return refreshTokenPromise;
 
-    const accessTokenExpiredAt = JSON.parse(authTokens)?.accessTokenExpiredAt;
-    const refreshToken = JSON.parse(authTokens)?.refreshToken;
+  refreshTokenPromise = (async () => {
+    try {
+      const result = await authAPI.refresh({ refreshToken: token });
 
-    if (!accessTokenExpiredAt || !refreshToken) return false;
-
-    const expiryTime = new Date(accessTokenExpiredAt).getTime();
-    const currentTime = new Date().getTime();
-    const thresholdMs = 30 * 1000;
-
-    if (expiryTime - currentTime <= thresholdMs) {
-      if (!refreshTokenPromise) {
-        refreshTokenPromise = await authAPI
-          .refresh({ refreshToken })
-          .then((res) => {
-            localStorage.setItem(ENV.AUTH_TOKENS, JSON.stringify(res));
-            writeTokenRequest(res.accessToken);
-            return res;
-          })
-          .catch((err) => {
-            console.log('err refresh', err);
-            localStorage.removeItem(ENV.AUTH_TOKENS);
-            redirect(ROUTES.LOGIN);
-            return null;
-          });
-      }
-
-      const newToken = await refreshTokenPromise;
+      localStorage.setItem(ENV.AUTH_TOKENS, JSON.stringify(result));
+      await writeTokenRequest(result.accessToken);
+      return result.accessToken;
+    } catch {
+      return null;
+    } finally {
       refreshTokenPromise = null;
-      return newToken;
     }
+  })();
 
-    return true;
-  } catch (error) {
-    console.log('Error refreshToken: ', error);
-    return false;
-  }
+  return await refreshTokenPromise;
 }

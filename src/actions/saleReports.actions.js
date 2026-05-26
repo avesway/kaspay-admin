@@ -1,7 +1,6 @@
 import { saleReportsAPI } from '@/api/saleReports.api';
 import { useSaleReportsStore } from '@/store';
 import { toast } from 'sonner';
-import { refreshToken } from './auth.actions';
 
 export async function updateStatisticsFilter(data) {
   const { statisticFilter, setStatisticFilter, paginationTopProducts, paginationReceipts, paginationOrderDays } =
@@ -9,8 +8,6 @@ export async function updateStatisticsFilter(data) {
 
   setStatisticFilter(data);
   const actualFilter = { ...statisticFilter, ...data };
-
-  await refreshToken();
 
   getStatisticsOrdersTotal(
     `?from=${actualFilter.from}&to=${actualFilter.to}&salePointIds=${actualFilter.salePointIds}&filterType=paid`,

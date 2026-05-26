@@ -2,8 +2,8 @@ import { PAGE_TITLES } from '@/constants/routes';
 import React from 'react';
 import { useLocation } from 'react-router';
 import StoragesList from './components/StoragesList';
-import StoragesProductsList from './components/StorageProductsList';
 import StorageRegisterProduct from './components/StoragesRegisterProduct';
+import { ProductsBalances } from '../products/components/productsBalances';
 
 function StoragesPage() {
   const { pathname } = useLocation();
@@ -20,7 +20,7 @@ function StoragesPage() {
       </div>
 
       <StoragesList />
-      <StoragesProductsList />
+      <ProductsBalances />
     </>
   );
 }

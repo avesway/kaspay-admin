@@ -36,10 +36,10 @@ import { Input } from '@/shared/ui/input';
 import { Separator } from '@/shared/ui/separator';
 import { useProductsStore, useStoragesStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
-import { getProducts } from '@/actions/products.actions';
 import { getListSuppliers, registerProducStorage } from '@/actions/storages.actions';
 import { storagesAPI } from '@/api/storages.api';
 import { priceRoundedKopecks, priceRoundedRubles } from '@/helpers/priceHelpers';
+import { getProductsCatalog } from '@/modules/products/actions/catalog';
 
 //.min(1, 'Укажите дату производства')
 //.min(1, 'Укажите время производства')
@@ -131,7 +131,7 @@ const StorageRegisterProduct = () => {
   useEffect(() => {
     if (open) {
       getListSuppliers();
-      getProducts('size=50&page=1');
+      getProductsCatalog();
       if (!fields.length) handleAddRow();
     }
   }, [open]);

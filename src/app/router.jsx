@@ -1,10 +1,10 @@
-import { createHashRouter, redirect } from 'react-router';
-import { App } from './app';
-import { ROUTES } from '@/constants';
-import { Providers } from './providers';
-import { AppLoader } from '@/shared/AppLoader';
-import { protectedLoader, ProtectedRoute } from './protectedRoute';
-import { AuthLayout, DashboardLayout } from '@/shared/layouts';
+import { createHashRouter, redirect } from "react-router";
+import { App } from "./app";
+import { ROUTES } from "@/constants";
+import { Providers } from "./providers";
+import { AppLoader } from "@/shared/AppLoader";
+import { protectedLoader, ProtectedRoute } from "./protectedRoute";
+import { AuthLayout, DashboardLayout } from "@/shared/layouts";
 
 export const router = createHashRouter([
   {
@@ -20,7 +20,7 @@ export const router = createHashRouter([
         children: [
           {
             path: ROUTES.LOGIN,
-            lazy: () => import('@/modules/auth/login.page'),
+            lazy: () => import("@/modules/auth/login.page"),
           },
         ],
       },
@@ -33,38 +33,53 @@ export const router = createHashRouter([
             children: [
               {
                 path: ROUTES.HOME,
-                lazy: () => import('@/modules/home.page'),
+                lazy: () => import("@/modules/home.page"),
               },
               {
                 path: ROUTES.PRODUCTS,
-                lazy: () => import('@/modules/products/products.page'),
+                children: [
+                  {
+                    index: true,
+                    lazy: () => import("@/modules/products/products.page"),
+                  },
+                  {
+                    path: "matrix-templates/new",
+                    lazy: () => import("@/modules/products/productMatrixTemplateEditor.page"),
+                  },
+                  {
+                    path: "matrix-templates/:id/edit",
+                    lazy: () => import("@/modules/products/productMatrixTemplateEditor.page"),
+                  },
+                ],
               },
               {
                 path: ROUTES.STORAGES,
-                lazy: () => import('@/modules/storages/storages.page'),
+                lazy: () => import("@/modules/storages/storages.page"),
               },
               {
                 path: ROUTES.PRICE_MANAGEMENT,
-                lazy: () => import('@/modules/priceManagement/priceManagement.page'),
+                lazy: () =>
+                  import("@/modules/priceManagement/priceManagement.page"),
               },
               {
                 path: ROUTES.SALE_REPORTS,
-                lazy: () => import('@/modules/saleReports/saleReports.page'),
+                lazy: () => import("@/modules/saleReports/saleReports.page"),
               },
               {
                 path: ROUTES.SALE_POINTS,
                 children: [
                   {
                     index: true,
-                    lazy: () => import('@/modules/salePoints/salePoints.page'),
+                    lazy: () => import("@/modules/salePoints/salePoints.page"),
                   },
                   {
-                    path: ':id',
-                    lazy: () => import('@/modules/salePoints/salePointDetails.page'),
+                    path: ":id",
+                    lazy: () =>
+                      import("@/modules/salePoints/salePointDetails.page"),
                   },
                   {
-                    path: ':id/device/:deviceId',
-                    lazy: () => import('@/modules/devices/device.page'),
+                    path: ":id/device/:deviceId",
+                    lazy: () => import("@/modules/devices/device.page"),
                   },
                 ],
               },

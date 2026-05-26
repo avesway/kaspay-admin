@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --mode test",
     "build": "vite build",
-    "deploy": "vite build && scp -r ./dist/* kaspay@kaspay-prod:/home/kaspay/applications/kaspay-admin/",
-    "test": "ssh kaspay@kaspay-prod \"rm -rf /home/kaspay/applications/kaspay-admin/*\""
+    "deployProd": "vite build --mode production && scp -r ./dist/* kaspay@kaspay-prod:/home/kaspay/applications/kaspay-admin/",
+    "deployTest": "vite build --mode test && scp -r ./dist/* kaspaytest@kaspay-test:/home/kaspaytest/applications/kaspay-admin/"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

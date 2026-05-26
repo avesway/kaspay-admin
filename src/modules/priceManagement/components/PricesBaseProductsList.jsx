@@ -6,23 +6,26 @@ import { Input } from '@/shared/ui/input';
 import { Checkbox } from '@/shared/ui/checkbox';
 import { useProductsBalancesStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
-import { getProductsBalances, updatePaginationProductsBalances } from '@/actions/productsBalances.actions';
 import usePriceBaseProducts from '../hooks/usePriceBaseProducts';
 import Pagination from '@/shared/Pagination';
 import { priceRoundedRubles } from '@/helpers/priceHelpers';
+import { setPaginationProductsBalances } from '@/modules/products/actions/balances/setPaginationProductsBalances';
+import { getProductsBalances } from '@/modules/products/actions/balances';
 
 const PricesBaseProductsList = () => {
-  const { productsBalances, pagination } = useProductsBalancesStore(
+  const { productsBalances, pagination, setParamsRequest } = useProductsBalancesStore(
     useShallow((state) => ({
       productsBalances: state.productsBalances,
       pagination: state.pagination,
+      setParamsRequest: state.setParamsRequest,
     })),
   );
 
   const { savePriceProduct, activeProduct, updateActiveProduct } = usePriceBaseProducts();
 
   useEffect(() => {
-    getProductsBalances('storageTypes=warehouse&storageTypes=salePoint&storageTypes=device&balanceTypes=inStock');
+    setParamsRequest('storageTypes=warehouse&storageTypes=salePoint&storageTypes=device&balanceTypes=inStock');
+    getProductsBalances();
   }, []);
 
   const columnsPriceManagement = [
@@ -54,16 +57,17 @@ const PricesBaseProductsList = () => {
       cell: ({ getValue }) => <span>{getValue()} ШТ</span>,
     },
     {
-      accessorKey: 'delivery.productionAttributes.expiredAt',
+      accessorKey: 'delivery',
       header: 'Окончание срока годности',
       cell: ({ getValue }) => {
-        if (getValue()) {
-          const target = parseISO(getValue());
+        const expiredAt = getValue()?.productionAttributes?.expiredAt;
+        if (expiredAt) {
+          const target = parseISO(expiredAt);
           const now = new Date();
           const hoursLeft = differenceInHours(target, now);
           return (
             <span>
-              {format(getValue(), 'dd.MM.yyyy HH:mm')} ({hoursLeft} ч)
+              {format(expiredAt, 'dd.MM.yyyy HH:mm')} ({hoursLeft} ч)
             </span>
           );
         }
@@ -297,7 +301,7 @@ const PricesBaseProductsList = () => {
       </CardHeader>
       <CardContent>
         <AppTable data={productsBalances} columns={memoizedColumns} paginationRequest={pagination} />
-        <Pagination pagination={pagination} setPagination={updatePaginationProductsBalances} />
+        <Pagination pagination={pagination} setPagination={setPaginationProductsBalances} />
       </CardContent>
     </Card>
   );
