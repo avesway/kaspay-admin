@@ -1,13 +1,15 @@
-import { Loader2, CircleAlert, ClipboardList } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-import { format } from 'date-fns';
-import { useDevicesStore } from '@/store';
 import React, { useEffect } from 'react';
+import { format } from 'date-fns';
+import { CircleAlert, ClipboardList, Loader2 } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
-import Pagination from '@/shared/Pagination';
+
 import AppTable from '@/shared/AppTable';
-import { getEventsDevice, updatePaginationEventsDevice } from '@/actions/devices.actions';
+import Pagination from '@/shared/Pagination';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+
 import DeviceEventsFilter from './DeviceEventsFilter';
+import { getEventsDevice, updatePaginationEventsDevice } from '../device.processes';
+import { useDevicesStore } from '../devices.store';
 
 const columnsTableEvents = [
   {
@@ -50,7 +52,7 @@ const DeviceEvents = () => {
 
       <Card className="mt-3">
         <CardHeader className="flex items-center gap-2 text-2xl">
-          <ClipboardList className="h-6 w-6 text-primary" />
+          <ClipboardList className="text-primary h-6 w-6" />
           <CardTitle className="flex items-center gap-2 text-2xl">Последние события</CardTitle>
         </CardHeader>
         <CardContent>
@@ -59,7 +61,7 @@ const DeviceEvents = () => {
               <Loader2 className="animate-spin" color="var(--color-primary)" />
             </div>
           ) : error.events ? (
-            <div className="mt-5 flex gap-3 justify-center">
+            <div className="mt-5 flex justify-center gap-3">
               <CircleAlert color="var(--color-destructive)" />
               <p className="text-destructive">Ошибка получения событий</p>
             </div>

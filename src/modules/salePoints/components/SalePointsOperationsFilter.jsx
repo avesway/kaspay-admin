@@ -1,14 +1,16 @@
-import { useSalePointsStore } from '@/store';
 import React, { useState } from 'react';
-import { Button } from '@/shared/ui/button';
-import { Card, CardContent } from '@/shared/ui/card';
-import { ru } from 'date-fns/locale';
 import { format } from 'date-fns';
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
-import { Calendar } from '@/shared/ui/calendar';
+import { ru } from 'date-fns/locale';
 import { CalendarIcon } from 'lucide-react';
-import { Label } from '@/shared/ui/label';
+
 import { updateOperationsFilter } from '@/actions/salePoints.actions';
+import { Button } from '@/shared/ui/button';
+import { Calendar } from '@/shared/ui/calendar';
+import { Card, CardContent } from '@/shared/ui/card';
+import { Label } from '@/shared/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
+
+import { useSalePointsStore } from '../salePoints.store';
 
 const SalePointsOperationsFilter = () => {
   const filterOperations = useSalePointsStore((state) => state.filterOperations);
@@ -17,7 +19,7 @@ const SalePointsOperationsFilter = () => {
 
   return (
     <Card className="my-10 flex">
-      <CardContent className="p-6 flex self-start gap-10 flex-row justify-between">
+      <CardContent className="flex flex-row justify-between gap-10 self-start p-6">
         <Popover open={openDateFrom} onOpenChange={setOpenDateFrom}>
           <PopoverTrigger asChild>
             <div className="w-64">

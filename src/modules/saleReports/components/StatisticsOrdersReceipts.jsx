@@ -1,13 +1,15 @@
-import { Loader2, CircleAlert } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-import { format } from 'date-fns';
 import React from 'react';
-import AppTable from '@/shared/AppTable';
-import { useSaleReportsStore } from '@/store';
+import { format } from 'date-fns';
+import { CircleAlert, Loader2 } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
-import Pagination from '@/shared/Pagination';
-import { updatePaginationStatisticsOrderReceipts } from '@/actions/saleReports.actions';
+
 import { priceRoundedRubles } from '@/helpers/priceHelpers';
+import AppTable from '@/shared/AppTable';
+import Pagination from '@/shared/Pagination';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+
+import { updatePaginationStatisticsOrderReceipts } from '../saleReports.processes';
+import { useSaleReportsStore } from '../saleReports.store';
 
 const yy = {
   orderId: '260311-890545',
@@ -66,7 +68,7 @@ const columnsTable = [
     accessorKey: 'averageMarginRate',
     header: 'Маржа, %',
     cell: ({ getValue }) => (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground border border-border">
+      <span className="bg-secondary text-secondary-foreground border-border inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium">
         {priceRoundedRubles(getValue())}%
       </span>
     ),
@@ -108,7 +110,7 @@ const StatisticsOrdersReceipts = () => {
             <Loader2 className="animate-spin" color="var(--color-primary)" />
           </div>
         ) : error.orderReceipts ? (
-          <div className="mt-5 flex gap-3 justify-center">
+          <div className="mt-5 flex justify-center gap-3">
             <CircleAlert color="var(--color-destructive)" />
             <p className="text-destructive">Ошибка получения статистики</p>
           </div>

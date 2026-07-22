@@ -1,14 +1,15 @@
 import { Outlet } from 'react-router';
-import AppSidebar from '../AppSidebar';
+
 import AppHeader from '../AppHeader';
+import AppSidebar from '../AppSidebar';
 
 const DashboardLayout = () => {
   return (
-    <div className="flex w-full h-full overflow-hidden">
+    <div className="flex h-full w-full overflow-hidden">
       <AppSidebar />
-      <div className="w-[80%] flex flex-col grow h-full">
+      <div className="flex h-full w-[80%] grow flex-col">
         <AppHeader />
-        <main className="p-5 h-[90%] overflow-x-auto whitespace-nowrap">
+        <main className="h-[90%] p-5 whitespace-nowrap">
           <Outlet />
         </main>
       </div>

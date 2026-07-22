@@ -1,11 +1,13 @@
-import { PAGE_TITLES } from '@/constants/routes';
 import React from 'react';
 import { useLocation } from 'react-router';
+
+import { PAGE_TITLES } from '@/constants/routes';
+
 import StatisticsFilter from './components/StatisticsFilter';
-import StatisticsSales from './components/StatisticsSales';
 import StatisticsOrdersDays from './components/StatisticsOrdersDays';
-import StatisticsOrdersTopProducts from './components/StatisticsOrdersTopProducts';
 import StatisticsOrdersReceipts from './components/StatisticsOrdersReceipts';
+import StatisticsOrdersTopProducts from './components/StatisticsOrdersTopProducts';
+import StatisticsSales from './components/StatisticsSales';
 
 function SalesPage() {
   const { pathname } = useLocation();
@@ -20,7 +22,7 @@ function SalesPage() {
       <StatisticsFilter />
       <StatisticsSales isFilter={true} />
 
-      <div className="flex flex-row flwx-wrap justify-between mt-10 max-lg:flex-col max-lg:gap-5">
+      <div className="flwx-wrap mt-10 flex flex-row justify-between max-lg:flex-col max-lg:gap-5">
         <StatisticsOrdersDays />
         <StatisticsOrdersTopProducts />
       </div>

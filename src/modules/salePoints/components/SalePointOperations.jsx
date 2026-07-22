@@ -1,14 +1,16 @@
-import { Loader2, CircleAlert, CreditCard } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-import { format } from 'date-fns';
-import { getOperationsSalePoint, updatePaginationOperationsSalePoint } from '@/actions/salePoints.actions';
-import { useSalePointsStore } from '@/store';
 import React, { useEffect } from 'react';
+import { format } from 'date-fns';
+import { CircleAlert, CreditCard, Loader2 } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
-import Pagination from '@/shared/Pagination';
-import AppTable from '@/shared/AppTable';
-import { cn } from '@/lib/utils';
+
+import { getOperationsSalePoint, updatePaginationOperationsSalePoint } from '@/actions/salePoints.actions';
 import { priceRoundedRubles } from '@/helpers/priceHelpers';
+import { cn } from '@/lib/utils';
+import AppTable from '@/shared/AppTable';
+import Pagination from '@/shared/Pagination';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+
+import { useSalePointsStore } from '../salePoints.store';
 
 const columnsTableOperations = [
   {
@@ -74,7 +76,7 @@ const columnsTableOperations = [
         <span
           className={cn(
             checkStatus(status),
-            'inline-flex items-center px-2.5 py-0.5 rounded-full text-[14px] font-medium  border border-border',
+            'border-border inline-flex items-center rounded-full border px-2.5 py-0.5 text-[14px] font-medium',
           )}
         >
           {description}
@@ -102,7 +104,7 @@ const SalePointOperations = () => {
   return (
     <Card className="mt-10">
       <CardHeader className="flex items-center gap-2 text-2xl">
-        <CreditCard className="h-6 w-6 text-primary" />
+        <CreditCard className="text-primary h-6 w-6" />
         <CardTitle className="flex items-center gap-2 text-2xl">Последние операции</CardTitle>
       </CardHeader>
       <CardContent>
@@ -111,7 +113,7 @@ const SalePointOperations = () => {
             <Loader2 className="animate-spin" color="var(--color-primary)" />
           </div>
         ) : error.operations ? (
-          <div className="mt-5 flex gap-3 justify-center">
+          <div className="mt-5 flex justify-center gap-3">
             <CircleAlert color="var(--color-destructive)" />
             <p className="text-destructive">Ошибка получения операций</p>
           </div>

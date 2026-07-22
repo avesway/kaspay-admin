@@ -1,12 +1,14 @@
-import { useSalePointsStore } from '@/store';
 import React, { useEffect } from 'react';
+import { CircleAlert, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router';
+import { useShallow } from 'zustand/react/shallow';
+
+import { ROUTES } from '@/constants';
 import AppTable from '@/shared/AppTable';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-import { useShallow } from 'zustand/react/shallow';
-import { useNavigate } from 'react-router';
-import { getListSalePoints } from '@/actions/salePoints.actions';
-import { ROUTES } from '@/constants';
-import { CircleAlert, Loader2 } from 'lucide-react';
+
+import { getListSalePoints } from '../salePoints.processes';
+import { useSalePointsStore } from '../salePoints.store';
 
 const columnsSalePoints = [
   {
@@ -83,7 +85,7 @@ const SalePointsList = () => {
             <Loader2 className="animate-spin" color="var(--color-primary)" />
           </div>
         ) : error.list ? (
-          <div className="mt-5 flex gap-3 justify-center">
+          <div className="mt-5 flex justify-center gap-3">
             <CircleAlert color="var(--color-destructive)" />
             <p className="text-destructive">Ошибка получения торговых точек</p>
           </div>

@@ -1,14 +1,16 @@
-import { useDevicesStore } from '@/store';
 import React, { useState } from 'react';
-import { Button } from '@/shared/ui/button';
-import { Card, CardContent } from '@/shared/ui/card';
-import { ru } from 'date-fns/locale';
 import { format } from 'date-fns';
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
-import { Calendar } from '@/shared/ui/calendar';
+import { ru } from 'date-fns/locale';
 import { CalendarIcon } from 'lucide-react';
+
+import { Button } from '@/shared/ui/button';
+import { Calendar } from '@/shared/ui/calendar';
+import { Card, CardContent } from '@/shared/ui/card';
 import { Label } from '@/shared/ui/label';
-import { updateEventsDeviceFilter } from '@/actions/devices.actions';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
+
+import { updateEventsDeviceFilter } from '../device.processes';
+import { useDevicesStore } from '../devices.store';
 
 const DeviceEventsFilter = () => {
   const filterEvents = useDevicesStore((state) => state.filterEvents);
@@ -17,7 +19,7 @@ const DeviceEventsFilter = () => {
 
   return (
     <Card className="my-3 flex">
-      <CardContent className="flex self-start gap-10 flex-row justify-between max-sm:flex-col max-sm:gap-3">
+      <CardContent className="flex flex-row justify-between gap-10 self-start max-sm:flex-col max-sm:gap-3">
         <Popover open={openDateFrom} onOpenChange={setOpenDateFrom}>
           <PopoverTrigger asChild>
             <div className="w-64">

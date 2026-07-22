@@ -1,8 +1,10 @@
-import { PAGE_TITLES } from '@/constants/routes';
 import React from 'react';
 import { useLocation } from 'react-router';
+
+import { PAGE_TITLES } from '@/constants/routes';
+
 import SalePointsList from './components/SalePointsList';
-import { useSalePointsStore } from '@/store';
+import { useSalePointsStore } from './salePoints.store';
 
 function SalePointsPage() {
   const { pathname } = useLocation();

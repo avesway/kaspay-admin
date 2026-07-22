@@ -1,13 +1,18 @@
 import React, { useEffect } from 'react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useParams } from 'react-router';
 import { useNavigate } from 'react-router';
-import { useDevicesStore, useSalePointsStore } from '@/store';
-import { getListDevices } from '@/actions/devices.actions';
-import { getListSalePoints } from '@/actions/salePoints.actions';
-import { Button } from '@/shared/ui/button';
-import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
+
+import { Button } from '@/shared/ui/button';
+
+import DeviceConnectPriceList from './components/DeviceConnectPriceList';
 import DeviceDetails from './components/DeviceDetails';
+import DeviceInfo from './components/DeviceInfo';
+import { getListDevices } from './device.processes';
+import { useDevicesStore } from './devices.store';
+import { getListSalePoints } from '../salePoints/salePoints.processes';
+import { useSalePointsStore } from '../salePoints/salePoints.store';
 
 function DevicePage() {
   const { id, deviceId } = useParams();
@@ -26,17 +31,19 @@ function DevicePage() {
 
   return (
     <div className="">
-      <div className="flex flex-items gap-5 max-sm:flex-col max-sm:gap-5">
+      <div className="flex-items flex gap-5 max-sm:flex-col max-sm:gap-5">
         <Button variant="outline" onClick={() => navigate(-1)}>
           <ArrowLeft />
           Назад
         </Button>
-        <h1 className="text-3xl font-bold flex flex-row items-center max-sm:text-xl">
-          Объекты / {!activeSalePoint ? <Loader2 className="animate-spin mx-1" /> : activeSalePoint.name} /{' '}
-          {!activeDevice ? <Loader2 className="animate-spin mx-1" /> : activeDevice.name}
+        <h1 className="flex flex-row items-center text-3xl font-bold max-sm:text-xl">
+          Объекты / {!activeSalePoint ? <Loader2 className="mx-1 animate-spin" /> : activeSalePoint.name} /{' '}
+          {!activeDevice ? <Loader2 className="mx-1 animate-spin" /> : activeDevice.name}
         </h1>
+        <DeviceConnectPriceList />
       </div>
 
+      <DeviceInfo />
       <DeviceDetails />
     </div>
   );

@@ -1,27 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '@/shared/ui/button';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from '@/shared/ui/form';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
 import { ArrowUpDown } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { useShallow } from 'zustand/react/shallow';
+
+import { getListSaleDevices, getListSalePoints } from '@/modules/salePoints/salePoints.processes';
+import { useSalePointsStore } from '@/modules/salePoints/salePoints.store';
+import { productsBalancesMovemenets } from '@/modules/storages/storages.processes';
+import { Button } from '@/shared/ui/button';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
 } from '@/shared/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
-import { useSalePointsStore } from '@/store';
-import { productsBalancesMovemenets } from '@/actions/storages.actions';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
 import { Textarea } from '@/shared/ui/textarea';
-import { getListSaleDevices, getListSalePoints } from '@/actions/salePoints.actions';
-import { useShallow } from 'zustand/react/shallow';
 
 const StorageDeviceMovingProduct = ({ product }) => {
   const [open, setOpen] = useState(false);
@@ -86,7 +87,7 @@ const StorageDeviceMovingProduct = ({ product }) => {
             onSubmit={form.handleSubmit(({ quantity, deviceId, description, type }) =>
               productsBalancesMovemenets(product.id, { quantity, deviceId, description, type }, form, setOpen),
             )}
-            className="flex flex-col gap-5 mt-5"
+            className="mt-5 flex flex-col gap-5"
           >
             <FormField
               control={form.control}

@@ -1,6 +1,6 @@
-import { ROUTES } from './routes';
-import { MENU } from './menu';
 import { ENV } from './env';
 import IMAGES from './images';
+import { MENU } from './menu';
+import { ROUTES } from './routes';
 
-export { ROUTES, MENU, IMAGES, ENV };
+export { ENV, IMAGES, MENU, ROUTES };

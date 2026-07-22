@@ -1,17 +1,19 @@
 import React from 'react';
-import AuthForm from './components/AuthForm';
-import { Card } from '@/shared/ui/card';
+
 import SvgLogo from '@/shared/SvgLogo';
-//type="image/svg+xml"
+import { Card } from '@/shared/ui/card';
+
+import AuthForm from './components/AuthForm';
+
 function AuthPage() {
   return (
-    <Card className="w-[30%] max-2xl:w-[60%] max-lg:w-[90%]">
-      <div className="flex items-center justify-center flex-col">
-        <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-6">
+    <Card className="w-[40%] max-2xl:w-[60%] max-lg:w-[90%]">
+      <div className="flex flex-col items-center justify-center">
+        <div className="border-sidebar-border flex h-16 items-center gap-2 border-b px-6">
           <SvgLogo size={50} />
 
           <div>
-            <h1 className="text-xl font-bold text-primary">KAS-PAY</h1>
+            <h1 className="text-primary text-xl font-bold">KAS-PAY</h1>
           </div>
         </div>
 

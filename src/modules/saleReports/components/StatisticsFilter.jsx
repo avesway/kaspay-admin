@@ -1,15 +1,18 @@
-import { useSalePointsStore, useSaleReportsStore } from '@/store';
 import React, { useState } from 'react';
-import { Button } from '@/shared/ui/button';
-import { Card, CardContent } from '@/shared/ui/card';
-import { ru } from 'date-fns/locale';
 import { format } from 'date-fns';
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
-import { Calendar } from '@/shared/ui/calendar';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
+import { ru } from 'date-fns/locale';
 import { CalendarIcon, Loader2 } from 'lucide-react';
+
+import { useSalePointsStore } from '@/modules/salePoints/salePoints.store';
+import { Button } from '@/shared/ui/button';
+import { Calendar } from '@/shared/ui/calendar';
+import { Card, CardContent } from '@/shared/ui/card';
 import { Label } from '@/shared/ui/label';
-import { updateStatisticsFilter } from '@/actions/saleReports.actions';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
+
+import { updateStatisticsFilter } from '../saleReports.processes';
+import { useSaleReportsStore } from '../saleReports.store';
 
 const StatisticsFilter = () => {
   const salePoints = useSalePointsStore((state) => state.salePoints);
@@ -19,7 +22,7 @@ const StatisticsFilter = () => {
 
   return (
     <Card className="my-10">
-      <CardContent className="p-6 flex flex-row justify-between max-sm:flex-col max-sm:gap-3">
+      <CardContent className="flex flex-row justify-between p-6 max-sm:flex-col max-sm:gap-3">
         <Popover open={openDateFrom} onOpenChange={setOpenDateFrom}>
           <PopoverTrigger asChild>
             <div className="w-[30%] max-sm:w-full">

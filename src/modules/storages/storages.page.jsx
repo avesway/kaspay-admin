@@ -1,9 +1,11 @@
-import { PAGE_TITLES } from '@/constants/routes';
 import React from 'react';
 import { useLocation } from 'react-router';
+
+import { PAGE_TITLES } from '@/constants/routes';
+
 import StoragesList from './components/StoragesList';
 import StorageRegisterProduct from './components/StoragesRegisterProduct';
-import { ProductsBalances } from '../products/components/productsBalances';
+import ProductsBalances from '../products/productsBalances/components/ProductsBalances';
 
 function StoragesPage() {
   const { pathname } = useLocation();

@@ -1,49 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import TimePicker from 'react-time-picker';
-import 'react-time-picker/dist/TimePicker.css';
-import * as z from 'zod';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-} from '@/shared/ui/dialog';
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/shared/ui/sheet';
-import { Button } from '@/shared/ui/button';
-import { FileText, Plus, Trash2, CalendarIcon, Search } from 'lucide-react';
-import { Calendar } from '@/shared/ui/calendar';
-import { ru } from 'date-fns/locale';
 import { format } from 'date-fns';
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
-import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from '@/shared/ui/form';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from '@/shared/ui/select';
-import { Input } from '@/shared/ui/input';
-import { Separator } from '@/shared/ui/separator';
-import { useProductsStore, useStoragesStore } from '@/store';
+import { ru } from 'date-fns/locale';
+import { CalendarIcon, FileText, Plus, Search, Trash2 } from 'lucide-react';
+import { useFieldArray, useForm } from 'react-hook-form';
+import TimePicker from 'react-time-picker';
+import * as z from 'zod';
 import { useShallow } from 'zustand/react/shallow';
-import { getListSuppliers, registerProducStorage } from '@/actions/storages.actions';
-import { storagesAPI } from '@/api/storages.api';
-import { priceRoundedKopecks, priceRoundedRubles } from '@/helpers/priceHelpers';
-import { getProductsCatalog } from '@/modules/products/actions/catalog';
 
-//.min(1, 'Укажите дату производства')
-//.min(1, 'Укажите время производства')
-//.min(1, { message: 'Срок годности должен быть больше нуля' })
+import { priceRoundedKopecks, priceRoundedRubles } from '@/helpers/priceHelpers';
+import { getProductsCatalog } from '@/modules/products/productsCatalog/productsCatalog.processes';
+import { useProductsCatalogStore } from '@/modules/products/productsCatalog/productsCatalog.store';
+import { storagesAPI } from '@/modules/storages/storages.api';
+import { getListSuppliers, registerProducStorage } from '@/modules/storages/storages.processes';
+import { Button } from '@/shared/ui/button';
+import { Calendar } from '@/shared/ui/calendar';
+import { DialogClose, DialogFooter } from '@/shared/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
+import { Input } from '@/shared/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from '@/shared/ui/select';
+import { Separator } from '@/shared/ui/separator';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/shared/ui/sheet';
+
+import { useStoragesStore } from '../storages.store';
+
+import 'react-time-picker/dist/TimePicker.css';
 
 const productItemSchema = z.object({
   productId: z.preprocess((val) => Number(val), z.number().min(1, { message: 'Выберите товар' })),
@@ -105,7 +87,7 @@ const StorageRegisterProduct = () => {
   const [openDate, setOpenDate] = useState(false);
   const [openDateProduction, setOpenDateProduction] = useState({});
   const [searchProduct, setSearchProduct] = useState('');
-  const products = useProductsStore((state) => state.products);
+  const products = useProductsCatalogStore((state) => state.products);
   const { suppliers, storages } = useStoragesStore(
     useShallow((state) => ({ suppliers: state.suppliers, storages: state.storages })),
   );
@@ -158,7 +140,7 @@ const StorageRegisterProduct = () => {
 
   const handleSearchProduct = async (value) => {
     setSearchProduct(value);
-    getProducts(`size=50&page=1&shortName=${value}`);
+    getProductsCatalog(`size=50&page=1&shortName=${value}`);
   };
 
   const handlePriceChange = async (index) => {
@@ -200,7 +182,7 @@ const StorageRegisterProduct = () => {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit((data) => registerProducStorage(data, form, setOpen))}
-              className="flex flex-col gap-5 mt-5 overflow-y-auto"
+              className="mt-5 flex flex-col gap-5 overflow-y-auto"
             >
               <div className="grid grid-cols-4 gap-5">
                 <FormField
@@ -319,11 +301,11 @@ const StorageRegisterProduct = () => {
                 </div>
 
                 {fields.length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">Нажмите "Добавить товар" для добавления товара</p>
+                  <p className="text-muted-foreground py-4 text-center text-sm">Нажмите "Добавить товар" для добавления товара</p>
                 )}
 
                 {fields.map((field, index) => (
-                  <div key={field.id} className="border border-border rounded-lg p-4 space-y-4 bg-card">
+                  <div key={field.id} className="border-border bg-card space-y-4 rounded-lg border p-4">
                     <div className="flex flex-row flex-wrap gap-8">
                       <FormField
                         control={form.control}
@@ -338,9 +320,9 @@ const StorageRegisterProduct = () => {
                                 <SelectValue placeholder="Выберите товар" />
                               </SelectTrigger>
                               <SelectContent position="popper" side="bottom" align="start" className="max-h-96" sideOffset={5}>
-                                <div className="sticky top-0 bg-popover z-10 p-2 border-b">
-                                  <div className="w-full h-10 relative">
-                                    <Search className="w-4 h-4 absolute top-[25%] left-1" color="var(--color-muted-foreground)" />
+                                <div className="bg-popover sticky top-0 z-10 border-b p-2">
+                                  <div className="relative h-10 w-full">
+                                    <Search className="absolute top-[25%] left-1 h-4 w-4" color="var(--color-muted-foreground)" />
                                     <Input
                                       placeholder="Введите название товара"
                                       type="text"
@@ -413,7 +395,7 @@ const StorageRegisterProduct = () => {
                               <TimePicker
                                 format="HH:mm"
                                 disableClock={true}
-                                className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-2 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                                className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                                 {...field}
                                 style={{ border: 'none' }}
                               />
@@ -427,7 +409,7 @@ const StorageRegisterProduct = () => {
                         control={form.control}
                         name={`products.${index}.productionAttributes.expirationPeriod`}
                         render={({ field }) => (
-                          <FormItem className="min-w-[7%] max-w-[10%]">
+                          <FormItem className="max-w-[10%] min-w-[7%]">
                             <FormLabel className="gap-1">Срок год. (ч)</FormLabel>
                             <FormControl>
                               <Input placeholder="Часы" type="number" {...field} />
@@ -437,26 +419,26 @@ const StorageRegisterProduct = () => {
                         )}
                       />
 
-                      <div className="flex items-center ml-auto">
+                      <div className="ml-auto flex items-center">
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon"
                           onClick={() => remove(index)}
                           disabled={fields.length < 2}
-                          className="h-8 w-8 text-destructive hover:text-destructive"
+                          className="text-destructive hover:text-destructive h-8 w-8"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
 
-                    <div className="flex flex-row flex-wrap gap-8 mt-8">
+                    <div className="mt-8 flex flex-row flex-wrap gap-8">
                       <FormField
                         control={form.control}
                         name={`products.${index}.quantity`}
                         render={({ field: { onChange, value } }) => (
-                          <FormItem className="min-w-[7%] max-w-[10%]">
+                          <FormItem className="max-w-[10%] min-w-[7%]">
                             <FormLabel className="gap-1">
                               Кол-во<span className="text-destructive">*</span>
                             </FormLabel>
@@ -480,7 +462,7 @@ const StorageRegisterProduct = () => {
                         control={form.control}
                         name={`products.${index}.priceAttributes.costPrice`}
                         render={({ field: { onChange, value } }) => (
-                          <FormItem className="min-w-[8%] max-w-[10%]">
+                          <FormItem className="max-w-[10%] min-w-[8%]">
                             <FormLabel className="gap-1">
                               Цена (шт)<span className="text-destructive">*</span>
                             </FormLabel>
@@ -504,7 +486,7 @@ const StorageRegisterProduct = () => {
                         control={form.control}
                         name={`products.${index}.priceAttributes.vatRate`}
                         render={({ field: { onChange, value } }) => (
-                          <FormItem className="min-w-[8%] max-w-[10%]">
+                          <FormItem className="max-w-[10%] min-w-[8%]">
                             <Select
                               value={value || ''}
                               onValueChange={(v) => {
@@ -543,7 +525,7 @@ const StorageRegisterProduct = () => {
                           <FormItem className="w-36">
                             <FormLabel className="gap-1">Стоимость (общая)</FormLabel>
                             <FormControl>
-                              <span className="text-sm h-9">{value} BYN</span>
+                              <span className="h-9 text-sm">{value} BYN</span>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -558,7 +540,7 @@ const StorageRegisterProduct = () => {
                             <FormLabel className="gap-1">Сумма НДС (общая)</FormLabel>
                             <FormControl>
                               {/* <Input placeholder="Сумма НДС" type="number" {...field} /> */}
-                              <span className="text-sm h-9">{value} BYN</span>
+                              <span className="h-9 text-sm">{value} BYN</span>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -573,7 +555,7 @@ const StorageRegisterProduct = () => {
                             <FormLabel className="gap-1">Стоим. с НДС (общая)</FormLabel>
                             <FormControl>
                               {/* <Input placeholder="Стоим. с НДС" type="number" {...field} /> */}
-                              <span className="text-sm h-9">{value} BYN</span>
+                              <span className="h-9 text-sm">{value} BYN</span>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -589,7 +571,7 @@ const StorageRegisterProduct = () => {
                 </Button>
               </div>
 
-              <DialogFooter className="sm:justify-start mt-5">
+              <DialogFooter className="mt-5 sm:justify-start">
                 <DialogClose asChild>
                   <Button
                     type="button"

@@ -1,11 +1,13 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/shared/ui/tabs';
-import { ClipboardList, CreditCard, Terminal } from 'lucide-react';
 import React, { useState } from 'react';
-import DeviceOperations from './DeviceOperations';
-import DeviceEvents from './DeviceEvents';
+import { ClipboardList, CreditCard, Terminal } from 'lucide-react';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
+
 import DeviceCommands from './DeviceCommands';
-import DeviceCommandsTypes from './DeviceCommandsTypes';
 import DeviceCommandsFilter from './DeviceCommandsFilter';
+import DeviceCommandsTypes from './DeviceCommandsTypes';
+import DeviceEvents from './DeviceEvents';
+import DeviceOperations from './DeviceOperations';
 
 const tabs = [
   {

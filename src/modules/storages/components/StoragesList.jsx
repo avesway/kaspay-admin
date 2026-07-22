@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { useStoragesStore } from '@/store';
-import { getListStorages } from '@/actions/storages.actions';
+
+import { getStatisticsStorageRemainingProducts } from '@/modules/saleReports/saleReports.processes';
+import { getListStorages } from '@/modules/storages/storages.processes';
+
 import StorageItem from './StorageItem';
-import { getStatisticsStorageRemainingProducts } from '@/actions/saleReports.actions';
+import { useStoragesStore } from '../storages.store';
 
 const StoragesList = () => {
   const { loading, storages } = useStoragesStore(
@@ -29,7 +31,7 @@ const StoragesList = () => {
   }, [storages]);
 
   return (
-    <div className="my-5 flex flex-row gap-5 flex-wrap">
+    <div className="my-5 flex flex-row flex-wrap gap-5">
       {storages.map((item) => (
         <StorageItem key={item.id} storage={item} loading={loading.listStorages} />
       ))}

@@ -1,11 +1,14 @@
-import { useDevicesStore, useSalePointsStore } from '@/store';
 import React, { useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-import { useShallow } from 'zustand/react/shallow';
-import { useNavigate } from 'react-router';
-import { ROUTES } from '@/constants';
-import { getListDevices } from '@/actions/devices.actions';
 import { CircleAlert, Loader2, Package } from 'lucide-react';
+import { useNavigate } from 'react-router';
+import { useShallow } from 'zustand/react/shallow';
+
+import { ROUTES } from '@/constants';
+import { useSalePointsStore } from '@/modules/salePoints/salePoints.store';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+
+import { getListDevices } from '../device.processes';
+import { useDevicesStore } from '../devices.store';
 
 const DevicesList = () => {
   const navigate = useNavigate();
@@ -33,32 +36,32 @@ const DevicesList = () => {
     <div className="py-10">
       <h2 className="text-xl font-semibold">Устройства</h2>
 
-      <div className="flex flex-col mt-5">
+      <div className="mt-5 flex flex-col">
         {loading.list ? (
           <div className="mt-10 flex justify-center">
             <Loader2 className="animate-spin" color="var(--color-primary)" />
           </div>
         ) : error.list ? (
-          <div className="mt-10 flex gap-3 justify-start">
+          <div className="mt-10 flex justify-start gap-3">
             <CircleAlert color="var(--color-destructive)" />
             <p className="text-destructive">Ошибка получения устройств</p>
           </div>
         ) : (
           devices.map((device) => (
             <Card
-              className="w-[48%] h-auto py-5 mb-5 cursor-pointer duration-200 hover:shadow-chart-5 max-sm:w-full"
+              className="hover:shadow-chart-5 mb-5 h-auto w-[48%] cursor-pointer py-5 duration-200 max-sm:w-full"
               key={device.id}
               onClick={() => goDevice(device)}
             >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <Package className="h-5 w-5 text-primary" />
+                  <Package className="text-primary h-5 w-5" />
                   {device.name}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div>
-                  <p className="text-sm text-muted-foreground">Расположение</p>
+                  <p className="text-muted-foreground text-sm">Расположение</p>
                   <p className="font-medium">
                     {device.address?.locationAddress?.country ? `${device.address?.locationAddress?.country}, ` : ''}
                     {device.address?.locationAddress?.city ? `г. ${device.address?.locationAddress?.city}, ` : ''}

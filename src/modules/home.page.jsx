@@ -1,8 +1,10 @@
-import { PAGE_TITLES } from '@/constants/routes';
 import React from 'react';
 import { useLocation } from 'react-router';
+
+import { PAGE_TITLES } from '@/constants/routes';
+
+import ProductsExpiredList from './products/productsBalances/components/ProductsExpiredList';
 import StatisticsSales from './saleReports/components/StatisticsSales';
-import ProductsExpiredList from './products/components/productsBalances/ProductsExpiredList';
 
 function HomePage() {
   const { pathname } = useLocation();

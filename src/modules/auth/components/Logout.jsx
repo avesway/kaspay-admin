@@ -1,10 +1,11 @@
-import { Button } from '@/shared/ui/button';
-import { LogOut } from 'lucide-react';
 import React from 'react';
+import { LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { ROUTES } from '@/constants';
 import { toast } from 'sonner';
-import { authAPI } from '@/api/auth.api';
+
+import { ROUTES } from '@/constants';
+import { authAPI } from '@/modules/auth/auth.api';
+import { Button } from '@/shared/ui/button';
 import { useSessionStore } from '@/store';
 import { useBankStore } from '@/store/bank.store';
 

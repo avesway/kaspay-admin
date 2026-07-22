@@ -1,6 +1,7 @@
-import { validateAuthToken } from '@/actions/auth.actions';
-import { ENV, ROUTES } from '@/constants';
 import axios from 'axios';
+
+import { ENV, ROUTES } from '@/constants';
+import { validateAuthToken } from '@/modules/auth/auth.processes';
 
 const instanceAxios = axios.create({ baseURL: `${ENV.SERVER_URL}${ENV.VERSION_API}` });
 
@@ -18,7 +19,7 @@ instanceAxios.interceptors.request.use(
 
     const authToken = await validateAuthToken();
 
-    if (!Boolean(authToken)) {
+    if (!authToken) {
       localStorage.removeItem(ENV.AUTH_TOKENS);
 
       window.location.replace(window.location.origin + window.location.pathname + '#' + ROUTES.LOGIN);

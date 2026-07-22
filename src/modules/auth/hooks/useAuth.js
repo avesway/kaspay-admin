@@ -1,8 +1,9 @@
-import { toast } from 'sonner';
-import { useNavigate } from 'react-router';
-import { ENV, ROUTES } from '@/constants';
 import { useState } from 'react';
-import { authAPI } from '@/api/auth.api';
+import { useNavigate } from 'react-router';
+import { toast } from 'sonner';
+
+import { ENV, ROUTES } from '@/constants';
+import { authAPI } from '@/modules/auth/auth.api';
 
 const useAuth = () => {
   const [loading, setLoading] = useState(false);

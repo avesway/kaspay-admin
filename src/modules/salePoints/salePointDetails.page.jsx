@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router';
-import { Button } from '@/shared/ui/button';
-import { ArrowLeft, Loader2 } from 'lucide-react';
-import { getListSalePoints } from '@/actions/salePoints.actions';
-import DevicesList from '../devices/components/DevicesList';
-import { useSalePointsStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
+
+import { Button } from '@/shared/ui/button';
+
+import { getListSalePoints } from './salePoints.processes';
+import { useSalePointsStore } from './salePoints.store';
+import DevicesList from '../devices/components/DevicesList';
 
 function SalePointDetailsPage() {
   const { id } = useParams();
@@ -21,13 +23,13 @@ function SalePointDetailsPage() {
 
   return (
     <div className="">
-      <div className="flex flex-items gap-5 max-sm:flex-col max-sm:gap-5">
+      <div className="flex-items flex gap-5 max-sm:flex-col max-sm:gap-5">
         <Button variant="outline" onClick={() => navigate(-1)}>
           <ArrowLeft />
           Назад
         </Button>
-        <h1 className="text-3xl font-bold flex flex-row items-center max-sm:text-xl">
-          Объекты / {!activeSalePoint ? <Loader2 className="animate-spin mx-1" /> : activeSalePoint.name}
+        <h1 className="flex flex-row items-center text-3xl font-bold max-sm:text-xl">
+          Объекты / {!activeSalePoint ? <Loader2 className="mx-1 animate-spin" /> : activeSalePoint.name}
         </h1>
       </div>
 

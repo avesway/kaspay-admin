@@ -1,15 +1,17 @@
 import React from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Loader2 } from 'lucide-react';
-import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from '@/shared/ui/form';
+
 import { Button } from '@/shared/ui/button';
-import { Input } from '@/shared/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import useAuth from '../hooks/useAuth';
-import { Label } from '@/shared/ui/label';
 import { Checkbox } from '@/shared/ui/checkbox';
 import { Field } from '@/shared/ui/field';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
+import { Input } from '@/shared/ui/input';
+import { Label } from '@/shared/ui/label';
+
+import useAuth from '../hooks/useAuth';
 
 const loginSchema = z.object({
   login: z
@@ -43,7 +45,7 @@ const AuthForm = () => {
 
   return (
     <Form {...form}>
-      <form className="flex flex-col mt-10 gap-4 w-[50%] max-md:w-[60%] max-sm:w-[90%]" onSubmit={onSubmit}>
+      <form className="mt-10 flex w-[60%] flex-col gap-4 max-md:w-[60%] max-sm:w-[90%]" onSubmit={onSubmit}>
         <FormField
           control={form.control}
           name="login"
@@ -103,7 +105,7 @@ const AuthForm = () => {
           )}
         />
 
-        <Button type="submit" className="mt-5 " disabled={loading}>
+        <Button type="submit" className="mt-5" disabled={loading}>
           Войти
           {loading && <Loader2 className="animate-spin" />}
         </Button>

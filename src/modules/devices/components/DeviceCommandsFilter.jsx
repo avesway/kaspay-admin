@@ -1,14 +1,16 @@
-import { useDevicesStore, useSalePointsStore } from '@/store';
 import React, { useState } from 'react';
-import { Button } from '@/shared/ui/button';
-import { Card, CardContent } from '@/shared/ui/card';
-import { ru } from 'date-fns/locale';
 import { format } from 'date-fns';
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
-import { Calendar } from '@/shared/ui/calendar';
+import { ru } from 'date-fns/locale';
 import { CalendarIcon } from 'lucide-react';
+
+import { Button } from '@/shared/ui/button';
+import { Calendar } from '@/shared/ui/calendar';
+import { Card, CardContent } from '@/shared/ui/card';
 import { Label } from '@/shared/ui/label';
-import { updateCommandsDeviceFilter } from '@/actions/devices.actions';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
+
+import { updateCommandsDeviceFilter } from '../device.processes';
+import { useDevicesStore } from '../devices.store';
 
 const DeviceCommandsFilter = () => {
   const filterCommands = useDevicesStore((state) => state.filterCommands);
@@ -16,8 +18,8 @@ const DeviceCommandsFilter = () => {
   const [openDateTo, setOpenDateTo] = useState(false);
 
   return (
-    <Card className="my-3 flex ">
-      <CardContent className="flex self-start gap-10 flex-row justify-between max-sm:flex-col max-sm:gap-3">
+    <Card className="my-3 flex">
+      <CardContent className="flex flex-row justify-between gap-10 self-start max-sm:flex-col max-sm:gap-3">
         <Popover open={openDateFrom} onOpenChange={setOpenDateFrom}>
           <PopoverTrigger asChild>
             <div className="w-64">

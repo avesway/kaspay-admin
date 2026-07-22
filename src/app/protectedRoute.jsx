@@ -1,13 +1,14 @@
-import { validateAuthToken } from '@/actions/auth.actions';
-import { authAPI } from '@/api/auth.api';
+import React from 'react';
+import { Navigate, Outlet, redirect } from 'react-router';
+
 import { writeTokenRequest } from '@/config/axios';
 import { ROUTES } from '@/constants';
-import { useAccountStore } from '@/store';
-import React from 'react';
-import { Outlet, Navigate, redirect } from 'react-router';
+import { authAPI } from '@/modules/auth/auth.api';
+import { validateAuthToken } from '@/modules/auth/auth.processes';
+import { useProfileStore } from '@/modules/profile/profile.store';
 
 export function ProtectedRoute() {
-  const account = useAccountStore((state) => state.account);
+  const account = useProfileStore((state) => state.account);
 
   if (!account) {
     return <Navigate to={ROUTES.LOGIN} replace />;
@@ -20,10 +21,10 @@ export async function protectedLoader() {
   try {
     const authToken = await validateAuthToken();
 
-    if (!Boolean(authToken)) return redirect(ROUTES.LOGIN);
+    if (!authToken) return redirect(ROUTES.LOGIN);
 
-    if (Boolean(authToken)) {
-      const { setAccount } = useAccountStore.getState();
+    if (authToken) {
+      const { setAccount } = useProfileStore.getState();
 
       await writeTokenRequest(authToken);
       const user = await authAPI.account();

@@ -1,14 +1,16 @@
-import { Loader2, CircleAlert } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-import { format, parse } from 'date-fns';
 import React from 'react';
-import { useSaleReportsStore } from '@/store';
-import { useShallow } from 'zustand/react/shallow';
-import Pagination from '@/shared/Pagination';
-import { updatePaginationStatisticsOrderDays } from '@/actions/saleReports.actions';
+import { format, parse } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { cn } from '@/lib/utils';
+import { CircleAlert, Loader2 } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
+
 import { priceRoundedRubles } from '@/helpers/priceHelpers';
+import { cn } from '@/lib/utils';
+import Pagination from '@/shared/Pagination';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+
+import { updatePaginationStatisticsOrderDays } from '../saleReports.processes';
+import { useSaleReportsStore } from '../saleReports.store';
 
 const StatisticsOrdersDays = () => {
   const { statisticOrderDays, paginationOrderDays, loading, error } = useSaleReportsStore(
@@ -31,7 +33,7 @@ const StatisticsOrdersDays = () => {
             <Loader2 className="animate-spin" color="var(--color-primary)" />
           </div>
         ) : error.orderDays ? (
-          <div className="mt-5 flex gap-3 justify-center">
+          <div className="mt-5 flex justify-center gap-3">
             <CircleAlert color="var(--color-destructive)" />
             <p className="text-destructive">Ошибка получения статистики</p>
           </div>
@@ -42,14 +44,14 @@ const StatisticsOrdersDays = () => {
         ) : (
           <>
             {statisticOrderDays.map((item) => (
-              <div key={item.reportDate} className="p-3 mb-3 border border-foreground/30 rounded-2xl flex justify-between">
+              <div key={item.reportDate} className="border-foreground/30 mb-3 flex justify-between rounded-2xl border p-3">
                 <div className="flex flex-col gap-1">
                   <p className="font-medium">
                     {item.reportDate
                       ? format(parse(item.reportDate, 'yyyy-MM-dd', new Date()), 'EEEE, d MMMM', { locale: ru })
                       : ''}
                   </p>
-                  <p className="text-[14px] text-foreground/70">{item.itemsQuantity} товаров</p>
+                  <p className="text-foreground/70 text-[14px]">{item.itemsQuantity} товаров</p>
                 </div>
                 <div className="flex flex-col gap-1">
                   <p className="text-xl font-bold">
