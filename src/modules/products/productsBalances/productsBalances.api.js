@@ -13,4 +13,8 @@ export const productsBalancesAPI = {
     const response = await instanceAxios.post(`products/balances/${id}/movemenets`, data);
     return response?.data;
   },
+  getProductDeviceMatrixItems: async (params) => {
+    const response = await instanceAxios.get(`products/balances/device-matrix-items?${params}`);
+    return response?.data;
+  },
 };

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, CircleAlert, Info, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useShallow } from 'zustand/react/shallow';
 
+import { getProductDeviceMatrixItems } from '@/modules/products/productsBalances/productsBalances.processes';
+import { useProductsBalancesStore } from '@/modules/products/productsBalances/productsBalances.store';
 import { getListSaleDevices, getListSalePoints } from '@/modules/salePoints/salePoints.processes';
 import { useSalePointsStore } from '@/modules/salePoints/salePoints.store';
 import { productsBalancesMovemenets } from '@/modules/storages/storages.processes';
@@ -19,15 +21,38 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/shared/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '@/shared/ui/dropdown-menu';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
 import { Textarea } from '@/shared/ui/textarea';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 
 const StorageDeviceMovingProduct = ({ product }) => {
   const [open, setOpen] = useState(false);
+  const [activeTerminal, setActiveTerminal] = useState(null);
+  const [isDeviceMatrix, setDeviceMatrix] = useState(false);
+  const [matrixItemIds, setMatrixItemIds] = useState([]);
   const { salePoints, saleDevices } = useSalePointsStore(
     useShallow((state) => ({ salePoints: state.salePoints, saleDevices: state.saleDevices })),
+  );
+  const { loading, error, setLoading, setError } = useProductsBalancesStore(
+    useShallow((state) => ({
+      loading: state.loading,
+      error: state.error,
+      setLoading: state.setLoading,
+      setError: state.setError,
+    })),
   );
   const productSchema = z.object({
     quantity: z.preprocess(
@@ -64,8 +89,30 @@ const StorageDeviceMovingProduct = ({ product }) => {
 
   useEffect(() => {
     const activeSalePoints = form.watch('salePointId');
-    if (activeSalePoints) getListSaleDevices(activeSalePoints);
+    if (activeSalePoints) getListSaleDevices(activeSalePoints, 'deviceTypes=terminal');
   }, [form.watch('salePointId')]);
+
+  useEffect(() => {
+    const activeDevice = form.watch('deviceId');
+    if (activeDevice) checkDeviceMatrix(activeDevice);
+  }, [form.watch('deviceId')]);
+
+  async function checkDeviceMatrix(deviceId) {
+    const isDeviceMatrix = activeTerminal.slaveDevices.find((device) => device.id === deviceId)?.deviceProductMatrixPriceList;
+
+    if (isDeviceMatrix) {
+      const items = await getProductDeviceMatrixItems(`deviceId=${deviceId}&productId=${product.product.id}`);
+
+      if (items) setMatrixItemIds(items);
+      setDeviceMatrix(true);
+      return;
+    }
+
+    setDeviceMatrix(false);
+    setMatrixItemIds([]);
+    setError({ productDeviceMatrixItems: false });
+    setLoading({ productDeviceMatrixItems: false });
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -85,7 +132,7 @@ const StorageDeviceMovingProduct = ({ product }) => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(({ quantity, deviceId, description, type }) =>
-              productsBalancesMovemenets(product.id, { quantity, deviceId, description, type }, form, setOpen),
+              productsBalancesMovemenets(product.id, { quantity, deviceId, description, type, matrixItemIds }, form, setOpen),
             )}
             className="mt-5 flex flex-col gap-5"
           >
@@ -135,22 +182,6 @@ const StorageDeviceMovingProduct = ({ product }) => {
                 )}
               />
             </div>
-            <FormField
-              control={form.control}
-              name="quantity"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel className="gap-1">
-                    Количество для перемещения<span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input placeholder="Введите количество" type="number" {...field} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             <div className="grid grid-cols-2 gap-5">
               <FormField
@@ -186,30 +217,126 @@ const StorageDeviceMovingProduct = ({ product }) => {
                 name="deviceId"
                 render={({ field: { onChange, value } }) => (
                   <FormItem>
-                    <Select value={value} onValueChange={onChange} disabled={!saleDevices.length}>
+                    <DropdownMenu>
                       <FormLabel className="gap-1">
                         Устройство<span className="text-destructive">*</span>
                       </FormLabel>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Укажите устройство">
-                          {value && saleDevices.find((device) => device.id == value)?.name}
-                        </SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          {saleDevices.map((device) => (
-                            <SelectItem key={device.id} value={device.id.toString()}>
-                              {device.name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                      <FormMessage />
-                    </Select>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="w-full justify-start" disabled={!saleDevices.length}>
+                          {value ? activeTerminal.slaveDevices.find((device) => device.id === value)?.name : 'Устройство'}
+                        </Button>
+                      </DropdownMenuTrigger>
+
+                      <DropdownMenuContent>
+                        <DropdownMenuLabel>Терминалы</DropdownMenuLabel>
+
+                        <DropdownMenuSeparator />
+
+                        {saleDevices.map((terminal) => (
+                          <DropdownMenuSub key={terminal.id}>
+                            <DropdownMenuSubTrigger>{terminal.name}</DropdownMenuSubTrigger>
+
+                            <DropdownMenuSubContent>
+                              {terminal.slaveDevices.map((device) => (
+                                <DropdownMenuItem
+                                  key={device.id}
+                                  onClick={() => {
+                                    setActiveTerminal(terminal);
+                                    onChange(device.id);
+                                  }}
+                                >
+                                  {device.name}
+                                </DropdownMenuItem>
+                              ))}
+                            </DropdownMenuSubContent>
+                          </DropdownMenuSub>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </FormItem>
                 )}
               />
             </div>
+
+            {loading.productDeviceMatrixItems ? (
+              <div className="mt-5 flex justify-center">
+                <Loader2 className="animate-spin" color="var(--color-primary)" />
+              </div>
+            ) : error.productDeviceMatrixItems ? (
+              <div className="mt-5 flex justify-center gap-3">
+                <CircleAlert color="var(--color-destructive)" />
+                <p className="text-destructive">Ошибка </p>
+              </div>
+            ) : (
+              <div>
+                {!matrixItemIds.length || !isDeviceMatrix ? (
+                  <FormField
+                    control={form.control}
+                    name="quantity"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel className="gap-1">
+                          Количество для перемещения<span className="text-destructive">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="Введите количество" type="number" {...field} />
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ) : (
+                  <div>
+                    <FormLabel className="gap-1">Продукт в матрице</FormLabel>
+                    {matrixItemIds.map((item) => (
+                      <div key={item.matrixItemId} className="mt-3 ml-3 flex flex-row items-center justify-between">
+                        <p className="mr-2 font-mono text-xs font-bold">
+                          {item.rowId}:{item.columnId}
+                        </p>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Info size={20} color="var(--color-primary)" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Позиция продукта в матрице:</p>
+                            <p>
+                              Ряд: {item.rowId}, Колонка: {item.columnId}
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+
+                        <Input
+                          placeholder="Введите количество"
+                          className="mr-3 ml-auto w-20"
+                          type="number"
+                          max={item.columnProductQuantity}
+                          value={item.actualQuantity.toString()}
+                          onChange={({ target }) => {
+                            setMatrixItemIds((prev) =>
+                              prev.map((i) =>
+                                i.matrixItemId === item.matrixItemId ? { ...i, actualQuantity: target.value.toString() } : i,
+                              ),
+                            );
+
+                            form.setValue('quantity', target.value.toString());
+                          }}
+                        />
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Info size={20} color="var(--color-primary)" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Максимальное количество в ячейке матрицы: {item.columnProductQuantity}</p>
+                            <p>Недостающее количество в ячейке: {item.missingQuantity - item.actualQuantity}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             <FormField
               control={form.control}

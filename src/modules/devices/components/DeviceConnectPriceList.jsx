@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
+import { useShallow } from 'zustand/react/shallow';
 
 import { devicesAPI } from '@/modules/devices/devices.api';
 import { getPricesListsItems } from '@/modules/priceManagement/pricesLists/pricesLists.processes';
@@ -27,7 +28,12 @@ const connectPriceListSchema = z.object({
 const DeviceConnectPriceList = () => {
   const pricesLists = usePricesListsStore((state) => state.pricesLists);
   const templates = useMatricesStore((state) => state.templates);
-  const activeDevice = useDevicesStore((state) => state.activeDevice);
+  const { activeTerminalDevice, activeControllerDevice } = useDevicesStore(
+    useShallow((state) => ({
+      activeTerminalDevice: state.activeTerminalDevice,
+      activeControllerDevice: state.activeControllerDevice,
+    })),
+  );
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState({ create: false, delete: false });
 
@@ -48,12 +54,12 @@ const DeviceConnectPriceList = () => {
   }, [form.watch('priceListId')]);
 
   useEffect(() => {
-    if (activeDevice)
+    if (activeControllerDevice)
       form.reset({
-        priceListId: activeDevice?.deviceProductMatrixPriceList?.priceListId || '',
-        matrixId: activeDevice?.deviceProductMatrixPriceList?.matrixId || '',
+        priceListId: activeControllerDevice?.deviceProductMatrixPriceList?.priceListId || '',
+        matrixId: activeControllerDevice?.deviceProductMatrixPriceList?.matrixId || '',
       });
-  }, [activeDevice]);
+  }, [activeControllerDevice]);
 
   useEffect(() => {
     getPricesListsItems();
@@ -68,17 +74,19 @@ const DeviceConnectPriceList = () => {
 
       const payload = {
         ...data,
-        deviceId: activeDevice.id,
+        deviceId: activeControllerDevice.id,
         type: selectMatrix.type,
       };
 
       await devicesAPI.connectPriceList(payload);
-      await getListDevices(activeDevice.id);
+      await getListDevices(activeTerminalDevice.id, activeControllerDevice.id);
 
       setOpen(false);
       toast.success('Прайс лист успешно подключен', { position: 'top-center' });
     } catch (error) {
-      toast.error('Ошибка подключения', { position: 'top-center' });
+      toast.error(error?.response?.data?.message || 'Ошибка подключения', {
+        position: 'top-center',
+      });
     } finally {
       setLoading((prev) => ({ ...prev, create: false }));
     }
@@ -88,8 +96,8 @@ const DeviceConnectPriceList = () => {
     try {
       setLoading((prev) => ({ ...prev, delete: true }));
 
-      await devicesAPI.removePriceList(activeDevice?.deviceProductMatrixPriceList?.id);
-      await getListDevices(activeDevice.id);
+      await devicesAPI.removePriceList(activeControllerDevice?.deviceProductMatrixPriceList?.id);
+      await getListDevices(activeTerminalDevice.id, activeControllerDevice.id);
 
       setOpen(false);
       form.reset({ priceListId: '', matrixId: '' });
@@ -164,7 +172,7 @@ const DeviceConnectPriceList = () => {
                   Отмена
                 </Button>
               </DialogClose>
-              {activeDevice?.deviceProductMatrixPriceList?.id ? (
+              {activeControllerDevice?.deviceProductMatrixPriceList?.id ? (
                 <DialogClose asChild>
                   <Button variant="destructive" className="ml-5" onClick={removePriceList} disabled={loading.delete}>
                     Удалить
@@ -172,7 +180,11 @@ const DeviceConnectPriceList = () => {
                   </Button>
                 </DialogClose>
               ) : null}
-              <Button type="submit" className="ml-5" disabled={loading.create || activeDevice?.deviceProductMatrixPriceList?.id}>
+              <Button
+                type="submit"
+                className="ml-5"
+                disabled={loading.create || activeControllerDevice?.deviceProductMatrixPriceList?.id}
+              >
                 Добавить
                 {loading.create && <Loader2 className="animate-spin" />}
               </Button>

@@ -23,12 +23,12 @@ export async function getListSalePoints(salePointId) {
   return salePoints;
 }
 
-export async function getListSaleDevices(salePointId) {
+export async function getListSaleDevices(salePointId, params) {
   const { setSaleDevices, setLoading, setError, updatePaginationDevices } = useSalePointsStore.getState();
   setLoading({ devices: true });
 
   const saleDevices = await salePointsAPI
-    .getListSaleDevices(`?salePointIds=${salePointId}`)
+    .getListSaleDevices(`?salePointIds=${salePointId}${params ? `&${params}` : ''}`)
     .then((res) => {
       setSaleDevices(res.items);
       updatePaginationDevices({ totalItems: res.totalItems, totalPages: res.totalPages });

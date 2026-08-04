@@ -5,8 +5,8 @@ import { devicesAPI } from '@/modules/devices/devices.api';
 import { useDevicesStore } from './devices.store';
 import { useSalePointsStore } from '../salePoints/salePoints.store';
 
-export async function getListDevices(deviceId) {
-  const { setDevices, setLoading, setError, setActiveDevice } = useDevicesStore.getState();
+export async function getListDevices(deviceId, slaveDeviceId) {
+  const { setDevices, setLoading, setError, setActiveTerminalDevice, setActiveControllerDevice } = useDevicesStore.getState();
   setLoading({ list: true });
 
   const devices = await devicesAPI
@@ -14,7 +14,8 @@ export async function getListDevices(deviceId) {
     .then((res) => {
       if (deviceId) {
         const device = res.items.find((item) => item.id === deviceId);
-        setActiveDevice(device);
+        setActiveTerminalDevice(device);
+        setActiveControllerDevice(device.slaveDevices.find((i) => i.id === slaveDeviceId));
       }
       setDevices(res.items);
       setError({ list: false });
@@ -30,13 +31,13 @@ export async function getListDevices(deviceId) {
 }
 
 export async function getEventsDevice() {
-  const { setDeviceEvents, setLoading, setError, updatePaginationEvents, filterEvents, paginationEvents, activeDevice } =
+  const { setDeviceEvents, setLoading, setError, updatePaginationEvents, filterEvents, paginationEvents, activeTerminalDevice } =
     useDevicesStore.getState();
   const { activeSalePoint } = useSalePointsStore.getState();
 
   setLoading({ events: true });
 
-  const params = `?from=${filterEvents.from}&to=${filterEvents.to}&salePointIds=${activeSalePoint.id}&deviceIds=${activeDevice.id}&size=${paginationEvents.size}&page=${paginationEvents.page}`;
+  const params = `?from=${filterEvents.from}&to=${filterEvents.to}&salePointIds=${activeSalePoint.id}&deviceIds=${activeTerminalDevice.id}&size=${paginationEvents.size}&page=${paginationEvents.page}`;
 
   const eventsDevice = await devicesAPI
     .getEventsDevices(params)
@@ -56,12 +57,19 @@ export async function getEventsDevice() {
 }
 
 export async function getCommandsDevice() {
-  const { setDeviceCommands, setLoading, setError, updatePaginationCommands, filterCommands, paginationCommands, activeDevice } =
-    useDevicesStore.getState();
+  const {
+    setDeviceCommands,
+    setLoading,
+    setError,
+    updatePaginationCommands,
+    filterCommands,
+    paginationCommands,
+    activeTerminalDevice,
+  } = useDevicesStore.getState();
 
   setLoading({ commands: true });
 
-  const params = `?from=${filterCommands.from}&to=${filterCommands.to}&deviceId=${activeDevice.id}&size=${paginationCommands.size}&page=${paginationCommands.page}`;
+  const params = `?from=${filterCommands.from}&to=${filterCommands.to}&deviceId=${activeTerminalDevice.id}&size=${paginationCommands.size}&page=${paginationCommands.page}`;
 
   const commandsDevice = await devicesAPI
     .getCommandsDevices(params)

@@ -8,6 +8,7 @@ import AppTable from '@/shared/AppTable';
 import Pagination from '@/shared/Pagination';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 
+import DeviceCommandsTypes from './DeviceCommandsTypes';
 import { getCommandsDevice, updatePaginationCommandsDevice } from '../device.processes';
 import { useDevicesStore } from '../devices.store';
 
@@ -62,9 +63,9 @@ const columnsTableCommands = [
 ];
 
 const DeviceCommands = () => {
-  const { activeDevice, deviceCommands, loading, error, paginationCommands } = useDevicesStore(
+  const { activeTerminalDevice, deviceCommands, loading, error, paginationCommands } = useDevicesStore(
     useShallow((state) => ({
-      activeDevice: state.activeDevice,
+      activeTerminalDevice: state.activeTerminalDevice,
       deviceCommands: state.deviceCommands,
       loading: state.loading,
       error: state.error,
@@ -73,14 +74,17 @@ const DeviceCommands = () => {
   );
 
   useEffect(() => {
-    if (activeDevice) getCommandsDevice();
-  }, [activeDevice]);
+    if (activeTerminalDevice) getCommandsDevice();
+  }, [activeTerminalDevice]);
 
   return (
-    <Card className="mt-3 w-[49%] max-sm:w-full">
-      <CardHeader className="flex items-center gap-2 text-2xl">
-        <ListCollapse className="text-primary h-6 w-6" />
-        <CardTitle className="flex items-center gap-2 text-2xl">Отправленные команды</CardTitle>
+    <Card className="mt-3 w-full max-sm:w-full">
+      <CardHeader className="flex items-center">
+        <div className="flex items-center gap-2">
+          <ListCollapse className="text-primary h-6 w-6" />
+          <CardTitle className="flex items-center gap-2 text-2xl">Отправленные команды</CardTitle>
+        </div>
+        <DeviceCommandsTypes />
       </CardHeader>
       <CardContent>
         {loading.commands ? (

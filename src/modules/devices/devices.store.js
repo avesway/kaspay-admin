@@ -6,7 +6,8 @@ export const useDevicesStore = create((set, get) => ({
   deviceEvents: [],
   deviceCommands: [],
   deviceCommandsTypes: [],
-  activeDevice: null,
+  activeTerminalDevice: null,
+  activeControllerDevice: null,
 
   paginationEvents: {
     size: 10,
@@ -47,7 +48,8 @@ export const useDevicesStore = create((set, get) => ({
   },
 
   setDevices: (data) => set({ devices: data }),
-  setActiveDevice: (data) => set({ activeDevice: data }),
+  setActiveTerminalDevice: (data) => set({ activeTerminalDevice: data }),
+  setActiveControllerDevice: (data) => set({ activeControllerDevice: data }),
   setDeviceEvents: (data) => set({ deviceEvents: data }),
   setDeviceCommands: (data) => set({ deviceCommands: data }),
   setDeviceCommandsTypes: (data) => set({ deviceCommandsTypes: data }),

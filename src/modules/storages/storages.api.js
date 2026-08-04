@@ -15,7 +15,6 @@ export const storagesAPI = {
   },
   createDelivery: async (data) => {
     const response = await instanceAxios.post(`deliveries`, data);
-
     return response?.data;
   },
   calculationsDeliveryPrice: async (data) => {

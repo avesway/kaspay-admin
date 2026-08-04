@@ -45,22 +45,41 @@ export async function getListSuppliers() {
 }
 
 export async function productsBalancesMovemenets(productId, data, form, setOpen) {
-  await productsBalancesAPI
-    .moving(productId, data)
-    .then((res) => {
-      getProductsBalances();
-      form.reset();
-      setOpen(false);
+  try {
+    async function prepareData() {
+      const result = { ...data };
 
-      toast.success('Продукт успешно перемещен', {
-        position: 'top-center',
-      });
-    })
-    .catch((err) => {
-      toast.error(err?.response?.data?.message || 'Ошибка перемещения продукта', {
-        position: 'top-center',
-      });
+      if (result.matrixItemIds.length === 0) {
+        delete result.matrixItemIds;
+      } else {
+        result.matrixItemIds = result.matrixItemIds.map((i) => ({
+          matrixItemId: i.matrixItemId,
+          quantity: Number(i.actualQuantity),
+        }));
+        result.type = 'deviceMatrix';
+        result.deviceId = result.deviceId.toString();
+        delete result.quantity;
+      }
+
+      return result;
+    }
+
+    const resultData = await prepareData();
+
+    await productsBalancesAPI.moving(productId, resultData);
+
+    getProductsBalances();
+    form.reset();
+    setOpen(false);
+
+    toast.success('Продукт успешно перемещен', {
+      position: 'top-center',
     });
+  } catch (error) {
+    toast.error(error?.response?.data?.message || 'Ошибка перемещения продукта', {
+      position: 'top-center',
+    });
+  }
 }
 
 export async function registerProducStorage(data, form, setOpen) {

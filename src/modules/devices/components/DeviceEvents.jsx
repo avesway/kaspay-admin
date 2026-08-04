@@ -32,9 +32,9 @@ const columnsTableEvents = [
 ];
 
 const DeviceEvents = () => {
-  const { activeDevice, deviceEvents, loading, error, paginationEvents } = useDevicesStore(
+  const { activeTerminalDevice, deviceEvents, loading, error, paginationEvents } = useDevicesStore(
     useShallow((state) => ({
-      activeDevice: state.activeDevice,
+      activeTerminalDevice: state.activeTerminalDevice,
       deviceEvents: state.deviceEvents,
       loading: state.loading,
       error: state.error,
@@ -43,8 +43,8 @@ const DeviceEvents = () => {
   );
 
   useEffect(() => {
-    if (activeDevice) getEventsDevice();
-  }, [activeDevice]);
+    if (activeTerminalDevice) getEventsDevice();
+  }, [activeTerminalDevice]);
 
   return (
     <>

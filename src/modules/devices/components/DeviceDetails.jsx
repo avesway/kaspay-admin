@@ -36,7 +36,7 @@ const tabs = [
       <>
         <DeviceCommandsFilter />
         <div className="flex flex-row justify-between max-sm:flex-col max-sm:gap-5">
-          <DeviceCommandsTypes />
+          {/* <DeviceCommandsTypes /> */}
           <DeviceCommands />
         </div>
       </>

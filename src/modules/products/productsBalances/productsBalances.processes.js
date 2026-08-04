@@ -64,3 +64,20 @@ export async function updateProductBalances(data) {
 
   setProductsBalances(updated);
 }
+
+export async function getProductDeviceMatrixItems(params) {
+  const { setLoading, setError, error } = useProductsBalancesStore.getState();
+
+  try {
+    setLoading({ productDeviceMatrixItems: true });
+
+    const productDeviceMatrixItems = await productsBalancesAPI.getProductDeviceMatrixItems(params);
+    // if (error.productDeviceMatrixItems) setError({ productDeviceMatrixItems: false });
+
+    return productDeviceMatrixItems;
+  } catch (error) {
+    setError({ productDeviceMatrixItems: true });
+  } finally {
+    setLoading({ productDeviceMatrixItems: false });
+  }
+}

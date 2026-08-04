@@ -15,19 +15,23 @@ import { getListSalePoints } from '../salePoints/salePoints.processes';
 import { useSalePointsStore } from '../salePoints/salePoints.store';
 
 function DevicePage() {
-  const { id, deviceId } = useParams();
+  const { id, deviceId, slaveDeviceId } = useParams();
   const navigate = useNavigate();
   const { salePoints, activeSalePoint } = useSalePointsStore(
     useShallow((state) => ({ salePoints: state.salePoints, activeSalePoint: state.activeSalePoint })),
   );
-  const { devices, activeDevice } = useDevicesStore(
-    useShallow((state) => ({ devices: state.devices, activeDevice: state.activeDevice })),
+  const { devices, activeTerminalDevice, activeControllerDevice } = useDevicesStore(
+    useShallow((state) => ({
+      devices: state.devices,
+      activeTerminalDevice: state.activeTerminalDevice,
+      activeControllerDevice: state.activeControllerDevice,
+    })),
   );
 
   useEffect(() => {
     if (id && !salePoints.length) getListSalePoints(id);
-    if (deviceId && !devices.length) getListDevices(deviceId);
-  }, [id, deviceId]);
+    if (deviceId && slaveDeviceId && !devices.length) getListDevices(deviceId, slaveDeviceId);
+  }, [id, deviceId, slaveDeviceId]);
 
   return (
     <div className="">
@@ -38,7 +42,8 @@ function DevicePage() {
         </Button>
         <h1 className="flex flex-row items-center text-3xl font-bold max-sm:text-xl">
           Объекты / {!activeSalePoint ? <Loader2 className="mx-1 animate-spin" /> : activeSalePoint.name} /{' '}
-          {!activeDevice ? <Loader2 className="mx-1 animate-spin" /> : activeDevice.name}
+          {!activeTerminalDevice ? <Loader2 className="mx-1 animate-spin" /> : activeTerminalDevice.name} /{' '}
+          {!activeControllerDevice ? <Loader2 className="mx-1 animate-spin" /> : activeControllerDevice.name}
         </h1>
         <DeviceConnectPriceList />
       </div>

@@ -74,7 +74,7 @@ export const router = createHashRouter([
                     lazy: () => import('@/modules/salePoints/salePointDetails.page'),
                   },
                   {
-                    path: ':id/device/:deviceId',
+                    path: ':id/device/:deviceId/:slaveDeviceId',
                     lazy: () => import('@/modules/devices/device.page'),
                   },
                 ],

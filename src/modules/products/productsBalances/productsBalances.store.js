@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 export const useProductsBalancesStore = create((set, get) => ({
   productsBalances: [],
+  productDeviceMatrixItems: [],
 
   paramsRequest: '',
   pagination: {
@@ -16,9 +17,11 @@ export const useProductsBalancesStore = create((set, get) => ({
     update: false,
     create: false,
     delete: false,
+    productDeviceMatrixItems: false,
   },
   error: {
     list: false,
+    productDeviceMatrixItems: false,
   },
 
   setProductsBalances: (productsBalances) => set({ productsBalances }),
