@@ -241,7 +241,6 @@ const PricesBaseProductsList = () => {
       header: 'Сохранить',
       cell: ({ row }) => {
         const originalId = row.original.id;
-        // const originalUploadToTerminal = row.original.uploadedToSalePoint;
 
         const isEqualValuesSaleRate =
           activeProduct.salePrice != null && activeProduct.originalSalePrice != null
@@ -251,10 +250,7 @@ const PricesBaseProductsList = () => {
           activeProduct.discountRate != null && activeProduct.originalDiscountRate != null
             ? activeProduct.discountRate === activeProduct.originalDiscountRate
             : true;
-        // const isEqualValuesUploadToTerminal =
-        //   activeProduct.uploadToTerminal != null ? activeProduct.uploadToTerminal === originalUploadToTerminal : true;
 
-        //   const isSaved = isEqualValuesDiscountRate && isEqualValuesSaleRate && isEqualValuesUploadToTerminal;
         const isSaved = isEqualValuesDiscountRate && isEqualValuesSaleRate;
 
         return (
@@ -267,32 +263,6 @@ const PricesBaseProductsList = () => {
         );
       },
     },
-    // {
-    //   accessorKey: 'uploadedToSalePoint',
-    //   header: 'Выгрузить на терминал',
-    //   cell: ({ row }) => {
-    //     const originalChecked = row.original.uploadedToSalePoint;
-    //     const originalId = row.original.id;
-
-    //     return (
-    //       <Checkbox
-    //         className="w-7 h-7"
-    //         checked={
-    //           originalId === activeProduct.productId && activeProduct.uploadToTerminal != null
-    //             ? activeProduct.uploadToTerminal
-    //             : originalChecked
-    //         }
-    //         onCheckedChange={(v) => {
-    //           updateActiveProduct({
-    //             productId: originalId,
-    //             uploadToTerminal: v,
-    //             isCalculations: activeProduct.isCalculations === null ? null : activeProduct.isCalculations,
-    //           });
-    //         }}
-    //       />
-    //     );
-    //   },
-    // },
   ];
 
   const memoizedColumns = useMemo(() => columnsPriceManagement, [activeProduct]);

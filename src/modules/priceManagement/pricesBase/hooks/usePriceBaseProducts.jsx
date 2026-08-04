@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 import { priceRoundedKopecks } from '@/helpers/priceHelpers';
-import { updateProductBalances } from '@/modules/products/productsBalances/productsBalances.processes';
+import { updatePriceProductBalance } from '@/modules/products/productsBalances/productsBalances.processes';
 
 import { calculationProductPrices } from '../priceBase.processes';
 import { usePriceBaseStore } from '../priceBase.store';
@@ -25,7 +25,6 @@ const usePriceBaseProducts = () => {
 
   const savePriceProduct = async (product) => {
     const data = {
-      //  uploadToTerminal: activeProduct.uploadToTerminal != null ? activeProduct.uploadToTerminal : product.uploadedToSalePoint,
       priceAttributes: {
         discountRate:
           activeProduct.discountRate != null
@@ -36,7 +35,7 @@ const usePriceBaseProducts = () => {
       },
     };
 
-    await updateProductBalances(activeProduct.productId, data);
+    await updatePriceProductBalance(activeProduct.productId, data);
   };
 
   return {
