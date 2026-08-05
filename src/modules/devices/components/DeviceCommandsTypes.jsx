@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu';
 
+import ChangeControllerLatchMode from './deviceCommandsForms/ChangeControllerLatchMode';
 import GeneralForm from './deviceCommandsForms/GeneralForm';
 import { getCommandsTypesDevice } from '../device.processes';
 import { useDevicesStore } from '../devices.store';
@@ -139,6 +140,8 @@ const DeviceCommandsTypes = () => {
     },
   ];
 
+  console.log('activeCommand', activeCommand);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -211,12 +214,21 @@ const DeviceCommandsTypes = () => {
             </DialogDescription>
           </DialogHeader>
 
-          <GeneralForm
-            activeCommand={activeCommand}
-            activeTerminalDevice={activeTerminalDevice}
-            loading={loading.sendCommand}
-            setOpen={setOpen}
-          />
+          {activeCommand?.name === 'changeControllerLatchMode' ? (
+            <ChangeControllerLatchMode
+              activeCommand={activeCommand}
+              activeTerminalDevice={activeTerminalDevice}
+              loading={loading.sendCommand}
+              setOpen={setOpen}
+            />
+          ) : (
+            <GeneralForm
+              activeCommand={activeCommand}
+              activeTerminalDevice={activeTerminalDevice}
+              loading={loading.sendCommand}
+              setOpen={setOpen}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </DropdownMenu>

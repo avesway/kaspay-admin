@@ -6,6 +6,7 @@ export const useDevicesStore = create((set, get) => ({
   deviceEvents: [],
   deviceCommands: [],
   deviceCommandsTypes: [],
+  deviceControllerLatchModes: [],
   activeTerminalDevice: null,
   activeControllerDevice: null,
 
@@ -39,12 +40,14 @@ export const useDevicesStore = create((set, get) => ({
     commands: false,
     commandsTypes: false,
     sendCommand: false,
+    deviceControllerLatchMode: false,
   },
   error: {
     list: false,
     events: false,
     commands: false,
     commandsTypes: false,
+    deviceControllerLatchMode: false,
   },
 
   setDevices: (data) => set({ devices: data }),
@@ -53,6 +56,7 @@ export const useDevicesStore = create((set, get) => ({
   setDeviceEvents: (data) => set({ deviceEvents: data }),
   setDeviceCommands: (data) => set({ deviceCommands: data }),
   setDeviceCommandsTypes: (data) => set({ deviceCommandsTypes: data }),
+  setDeviceControllerLatchModes: (data) => set({ deviceControllerLatchModes: data }),
   setLoading: (data) => set({ loading: { ...get().loading, ...data } }),
   setError: (data) => set({ error: { ...get().error, ...data } }),
 

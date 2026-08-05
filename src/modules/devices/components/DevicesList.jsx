@@ -92,12 +92,14 @@ const DevicesList = () => {
                     >
                       <div className="flex flex-row flex-wrap justify-between gap-3">
                         <div>
-                          <p className="text-muted-foreground text-sm">Имя</p>
+                          <p className="text-muted-foreground text-sm">Название</p>
                           <p>{controllerDevice.name}</p>
                         </div>
                         <div>
                           <p className="text-muted-foreground text-sm">Тип</p>
-                          <p>{controllerDevice.type.description}</p>
+                          <span className="bg-secondary text-secondary-foreground border-border inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium">
+                            {controllerDevice.type.description}
+                          </span>
                         </div>
                         <div>{deviceStatusBadge(controllerDevice.statusType)}</div>
                         <div>

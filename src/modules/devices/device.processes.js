@@ -103,6 +103,23 @@ export async function getCommandsTypesDevice() {
     .finally(() => setLoading({ commandsTypes: false }));
 }
 
+export async function getDeviceControllerLatchModes() {
+  const { setDeviceControllerLatchModes, setLoading, setError, error } = useDevicesStore.getState();
+
+  try {
+    setLoading({ deviceControllerLatchMode: true });
+
+    const latchModes = await devicesAPI.getDeviceControllerLatchModes();
+    setDeviceControllerLatchModes(latchModes);
+
+    if (error.deviceControllerLatchMode) setError({ deviceControllerLatchMode: false });
+  } catch (error) {
+    setError({ deviceControllerLatchMode: true });
+  } finally {
+    setLoading({ deviceControllerLatchMode: false });
+  }
+}
+
 export async function sendCommandDevice(data, setOpen) {
   const { setLoading } = useDevicesStore.getState();
 

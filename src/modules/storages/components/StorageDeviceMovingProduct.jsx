@@ -269,7 +269,82 @@ const StorageDeviceMovingProduct = ({ product }) => {
               </div>
             ) : (
               <div>
-                {!matrixItemIds.length || !isDeviceMatrix ? (
+                {isDeviceMatrix ? (
+                  matrixItemIds.length ? (
+                    <div>
+                      <FormLabel className="gap-1">Продукт в матрице</FormLabel>
+                      {matrixItemIds.map((item) => (
+                        <div key={item.matrixItemId} className="mt-3 ml-3 flex flex-row items-center justify-between">
+                          <p className="mr-2 font-mono text-xs font-bold">
+                            {item.rowId}:{item.columnId}
+                          </p>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Info size={20} color="var(--color-primary)" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Позиция продукта в матрице:</p>
+                              <p>
+                                Ряд: {item.rowId}, Колонка: {item.columnId}
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+
+                          <Input
+                            placeholder="Введите количество"
+                            className="mr-3 ml-auto w-20"
+                            type="number"
+                            max={item.columnProductQuantity}
+                            value={item.actualQuantity.toString()}
+                            onChange={({ target }) => {
+                              setMatrixItemIds((prev) =>
+                                prev.map((i) =>
+                                  i.matrixItemId === item.matrixItemId ? { ...i, actualQuantity: target.value.toString() } : i,
+                                ),
+                              );
+
+                              form.setValue('quantity', target.value.toString());
+                            }}
+                          />
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Info size={20} color="var(--color-primary)" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Максимальное количество в ячейке матрицы: {item.columnProductQuantity}</p>
+                              <p>Недостающее количество в ячейке: {item.missingQuantity - item.actualQuantity}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="mb-2 flex flex-row items-center gap-2">
+                      <Info size={20} color="var(--color-primary)" />
+                      <div>
+                        <p className="text-[12px]">Перемещение продукта, находящегося не в матрице невозможно</p>
+                      </div>
+                    </div>
+                  )
+                ) : (
+                  <FormField
+                    control={form.control}
+                    name="quantity"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel className="gap-1">
+                          Количество для перемещения<span className="text-destructive">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="Введите количество" type="number" {...field} />
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+                {/* {!matrixItemIds.length || !isDeviceMatrix ? (
                   <FormField
                     control={form.control}
                     name="quantity"
@@ -334,7 +409,7 @@ const StorageDeviceMovingProduct = ({ product }) => {
                       </div>
                     ))}
                   </div>
-                )}
+                )} */}
               </div>
             )}
 

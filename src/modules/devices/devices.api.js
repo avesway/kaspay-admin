@@ -17,6 +17,10 @@ export const devicesAPI = {
     const response = await instanceAxios.get(`devices/commands/types`);
     return response?.data;
   },
+  getDeviceControllerLatchModes: async () => {
+    const response = await instanceAxios.get(`devices/latch-modes`);
+    return response?.data;
+  },
   sendCommandDevices: async (data) => {
     const response = await instanceAxios.post(`devices/commands`, data);
     return response?.data;

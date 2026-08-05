@@ -92,7 +92,7 @@ const MatrixGridRow = ({ row, products, activeMatrixRows, setActiveMatrixRows, s
         </Button>
         <span className="text-sm">Ряд {row.row}</span>
         <div className="ml-10 flex flex-row items-center gap-2">
-          <Input type="number" value={row?.columns?.length} onChange={() => {}} className="h-7 w-14" />
+          <Input type="number" value={row?.columns?.length} onChange={() => {}} max={20} disabled className="h-7 w-14" />
           <Button variant="outline" className="h-7 w-7" disabled={row.columns.length === 20} onClick={() => addColumn(row.row)}>
             <Plus />
           </Button>
