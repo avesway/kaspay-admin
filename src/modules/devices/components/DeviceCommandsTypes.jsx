@@ -12,17 +12,21 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu';
 
+import ChangeControllerFirmware from './deviceCommandsForms/ChangeControllerFirmware';
 import ChangeControllerLatchMode from './deviceCommandsForms/ChangeControllerLatchMode';
+import ChangeControllerWiFi from './deviceCommandsForms/ChangeControllerWiFi';
+import ControllerLogs from './deviceCommandsForms/ControllerLogs';
 import GeneralForm from './deviceCommandsForms/GeneralForm';
 import { getCommandsTypesDevice } from '../device.processes';
 import { useDevicesStore } from '../devices.store';
 
 const DeviceCommandsTypes = () => {
-  const { deviceCommandsTypes, loading, activeTerminalDevice } = useDevicesStore(
+  const { deviceCommandsTypes, loading, activeTerminalDevice, activeControllerDevice } = useDevicesStore(
     useShallow((state) => ({
       deviceCommandsTypes: state.deviceCommandsTypes,
       loading: state.loading,
       activeTerminalDevice: state.activeTerminalDevice,
+      activeControllerDevice: state.activeControllerDevice,
     })),
   );
 
@@ -55,92 +59,9 @@ const DeviceCommandsTypes = () => {
     'getControllerStatus',
     'changeControllerLatchMode',
     'updateControllerFirmware',
+    'updateControllerWifi',
+    'rebootController',
   ];
-
-  const fff = [
-    {
-      description: 'Проверка канала связи',
-      name: 'checkChannel',
-    },
-    {
-      description: 'Переподключить канал связи',
-      name: 'reconnectChannel',
-    },
-    {
-      description: 'Перезагрузить приложение',
-      name: 'reloadApplication',
-    },
-    {
-      description: 'Перезагрузить конфигурацию',
-      name: 'reloadConfiguration',
-    },
-    {
-      description: 'Свернуть приложение',
-      name: 'minimizeApplication',
-    },
-    {
-      description: 'Отправить лог устройства партнеру',
-      name: 'sendLogToPartner',
-    },
-    {
-      description: 'Выйти из приложения',
-      name: 'logout',
-    },
-    {
-      description: 'Запросить информацию о терминале',
-      name: 'getPosInfo',
-    },
-    {
-      description: 'Открыть смену',
-      name: 'openShift',
-    },
-    {
-      description: 'Закрыть смену',
-      name: 'closeShift',
-    },
-    {
-      description: 'Остановить продажи',
-      name: 'stopSale',
-    },
-    {
-      description: 'Возобновить продажи',
-      name: 'resumeSale',
-    },
-    {
-      description: 'Перезагрузить каталог с товарами',
-      name: 'reloadCatalog',
-    },
-    {
-      description: 'Открыть защелку',
-      name: 'openLatch',
-    },
-    {
-      description: 'Закрыть защелку',
-      name: 'closeLatch',
-    },
-    {
-      description: 'Выполнить WebSocket запрос',
-      name: 'executeWsRequest',
-    },
-    {
-      description: 'Получить лог работы контроллера',
-      name: 'getControllerLog',
-    },
-    {
-      description: 'Получить статус контроллера',
-      name: 'getControllerStatus',
-    },
-    {
-      description: 'Изменить тип защелки контроллера',
-      name: 'changeControllerLatchMode',
-    },
-    {
-      description: 'Обновить прошивку контроллера',
-      name: 'updateControllerFirmware',
-    },
-  ];
-
-  console.log('activeCommand', activeCommand);
 
   return (
     <DropdownMenu>
@@ -218,6 +139,30 @@ const DeviceCommandsTypes = () => {
             <ChangeControllerLatchMode
               activeCommand={activeCommand}
               activeTerminalDevice={activeTerminalDevice}
+              loading={loading.sendCommand}
+              setOpen={setOpen}
+            />
+          ) : activeCommand?.name === 'updateControllerWifi' ? (
+            <ChangeControllerWiFi
+              activeCommand={activeCommand}
+              activeTerminalDevice={activeTerminalDevice}
+              activeControllerDevice={activeControllerDevice}
+              loading={loading.sendCommand}
+              setOpen={setOpen}
+            />
+          ) : activeCommand?.name === 'updateControllerFirmware' ? (
+            <ChangeControllerFirmware
+              activeCommand={activeCommand}
+              activeTerminalDevice={activeTerminalDevice}
+              activeControllerDevice={activeControllerDevice}
+              loading={loading.sendCommand}
+              setOpen={setOpen}
+            />
+          ) : activeCommand?.name === 'getControllerLog' ? (
+            <ControllerLogs
+              activeCommand={activeCommand}
+              activeTerminalDevice={activeTerminalDevice}
+              activeControllerDevice={activeControllerDevice}
               loading={loading.sendCommand}
               setOpen={setOpen}
             />

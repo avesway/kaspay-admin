@@ -120,6 +120,23 @@ export async function getDeviceControllerLatchModes() {
   }
 }
 
+export async function getDeviceControllerFirmwares() {
+  const { setDeviceControllerFirmwares, setLoading, setError, error } = useDevicesStore.getState();
+
+  try {
+    setLoading({ deviceControllerFirmware: true });
+
+    const firmwares = await devicesAPI.getDeviceControllerFirmwares();
+    setDeviceControllerFirmwares(firmwares.items);
+
+    if (error.deviceControllerFirmware) setError({ deviceControllerFirmware: false });
+  } catch (error) {
+    setError({ deviceControllerFirmware: true });
+  } finally {
+    setLoading({ deviceControllerFirmware: false });
+  }
+}
+
 export async function sendCommandDevice(data, setOpen) {
   const { setLoading } = useDevicesStore.getState();
 
