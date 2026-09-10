@@ -1,5 +1,6 @@
+import { ChartColumn, DollarSign, LayoutDashboard, Package, Store, TrendingUp, Warehouse } from 'lucide-react';
+
 import { ROUTES } from './routes';
-import { LayoutDashboard, Package, Warehouse, DollarSign, TrendingUp, Store } from 'lucide-react';
 
 export const MENU = [
   {
@@ -34,6 +35,12 @@ export const MENU = [
   },
   {
     id: 6,
+    title: 'Все отчеты',
+    url: ROUTES.REPORTS,
+    icon: ChartColumn,
+  },
+  {
+    id: 7,
     title: 'Объекты',
     url: ROUTES.SALE_POINTS,
     icon: Store,

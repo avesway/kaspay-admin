@@ -79,6 +79,19 @@ export const router = createHashRouter([
                   },
                 ],
               },
+              {
+                path: ROUTES.REPORTS,
+                children: [
+                  {
+                    index: true,
+                    lazy: () => import('@/modules/reports/reports.page'),
+                  },
+                  {
+                    path: ':reportName',
+                    lazy: () => import('@/modules/reports/report.page'),
+                  },
+                ],
+              },
             ],
           },
         ],

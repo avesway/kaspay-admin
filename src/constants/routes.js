@@ -8,6 +8,7 @@ export const ROUTES = {
   PRICE_MANAGEMENT: '/price-management',
   SALE_REPORTS: '/sale-reports',
   SALE_POINTS: '/sale-points',
+  REPORTS: '/reports',
 };
 
 export const PAGE_TITLES = {
@@ -17,4 +18,5 @@ export const PAGE_TITLES = {
   [ROUTES.PRICE_MANAGEMENT]: 'Управление ценами',
   [ROUTES.SALE_REPORTS]: 'Отчеты по продажам',
   [ROUTES.SALE_POINTS]: 'Объекты',
+  [ROUTES.REPORTS]: 'Все отчеты',
 };

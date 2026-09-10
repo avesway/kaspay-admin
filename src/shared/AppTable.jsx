@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table';
-import { useReactTable, flexRender, getCoreRowModel, getPaginationRowModel } from '@tanstack/react-table';
+import { flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table';
+
 import { cn } from '@/lib/utils';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table';
 
 const AppTable = ({ data = [], columns = [], paginationRequest, onClick = () => {}, isClickable }) => {
   const [pagination, setPagination] = useState({
@@ -32,13 +33,13 @@ const AppTable = ({ data = [], columns = [], paginationRequest, onClick = () => 
 
   return (
     <div className="space-y-4">
-      <Table className="border border-muted">
+      <Table className="border-muted border">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id} className=" h-8">
+                  <TableHead key={header.id} className="h-8">
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 );
@@ -64,7 +65,7 @@ const AppTable = ({ data = [], columns = [], paginationRequest, onClick = () => 
             ))
           ) : (
             <TableRow className="hover:bg-transparent">
-              <TableCell colSpan={columns.length} className="h-24 text-center text-text-60">
+              <TableCell colSpan={columns.length} className="text-text-60 h-24 text-center">
                 Нет данных.
               </TableCell>
             </TableRow>
