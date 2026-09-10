@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ArrowLeft, Construction } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router';
 
@@ -7,8 +7,9 @@ import { Button } from '@/shared/ui/button';
 import { Card, CardContent } from '@/shared/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 
+import ReportsFilter from './components/ReportsFilter';
 import RevenueDynamics from './components/revenueDynamics/RevenueDynamics';
-import { updateGranularity } from './reports.processes';
+import { getReportsSalePoints, updateGranularity } from './reports.processes';
 import { useReportsStore } from './reports.store';
 
 const GRANULARITY_TABS = [
@@ -24,6 +25,12 @@ const ReportPage = () => {
   const granularity = useReportsStore((state) => state.granularity);
 
   const isRevenueDynamics = report?.name === 'revenueDynamics';
+
+  useEffect(() => {
+    if (report?.isAvailable && isRevenueDynamics) {
+      getReportsSalePoints();
+    }
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -49,7 +56,9 @@ const ReportPage = () => {
 
       {report?.isAvailable && isRevenueDynamics && (
         <div>
-          <Tabs value={granularity} onValueChange={updateGranularity}>
+          <ReportsFilter />
+
+          <Tabs value={granularity} onValueChange={updateGranularity} className="mt-5">
             <TabsList className="w-fit">
               {GRANULARITY_TABS.map((tab) => (
                 <TabsTrigger key={tab.value} value={tab.value}>

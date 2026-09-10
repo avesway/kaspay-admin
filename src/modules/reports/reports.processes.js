@@ -49,7 +49,7 @@ export async function updateReportsFilter(data) {
   const { setReportsFilter } = useReportsStore.getState();
 
   setReportsFilter(data);
-  await getReports();
+  await getRevenueDynamics();
 }
 
 export async function getReportsSalePoints() {

@@ -27,8 +27,8 @@ const ReportsFilter = () => {
   };
 
   return (
-    <Card className="my-10">
-      <CardContent className="flex flex-row justify-between p-6 max-sm:flex-col max-sm:gap-3">
+    <Card className="my-6">
+      <CardContent className="flex flex-row justify-between p-4 max-sm:flex-col max-sm:gap-3">
         <Popover open={openDateFrom} onOpenChange={setOpenDateFrom}>
           <PopoverTrigger asChild>
             <div className="w-[30%] max-sm:w-full">

@@ -6,7 +6,6 @@ import { useShallow } from 'zustand/react/shallow';
 import { PAGE_TITLES } from '@/constants/routes';
 
 import ReportsCategoryTabs from './components/ReportsCategoryTabs';
-import ReportsFilter from './components/ReportsFilter';
 import ReportsGrid from './components/ReportsGrid';
 import { getReports, getReportsSalePoints } from './reports.processes';
 import { useReportsStore } from './reports.store';
@@ -21,7 +20,6 @@ function ReportsPage() {
   );
 
   useEffect(() => {
-    getReportsSalePoints();
     getReports();
   }, []);
 
@@ -31,8 +29,6 @@ function ReportsPage() {
         <h1 className="text-3xl font-bold">{PAGE_TITLES[pathname]}</h1>
         <p className="text-muted-foreground">Каталог аналитических отчётов по кофейням и микромаркетам</p>
       </div>
-
-      <ReportsFilter />
 
       <ReportsCategoryTabs />
 

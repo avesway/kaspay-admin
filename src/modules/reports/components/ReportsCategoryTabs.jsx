@@ -10,7 +10,7 @@ const ReportsCategoryTabs = () => {
   const activeCategoryType = useReportsStore((state) => state.activeCategoryType);
 
   return (
-    <Tabs value={activeCategoryType} onValueChange={updateCategoryType}>
+    <Tabs value={activeCategoryType} onValueChange={updateCategoryType} className="mt-5">
       <TabsList>
         {REPORTS_CATEGORY_TYPES.map((tab) => (
           <TabsTrigger key={tab.value} value={tab.value}>
