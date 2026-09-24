@@ -16,14 +16,15 @@ import { useReportsStore } from '../reports.store';
 
 const ALL_SALE_POINTS = 'all';
 
-const ReportsFilter = () => {
+// onUpdate — процесс перезапроса конкретного отчета после смены фильтра
+const ReportsFilter = ({ onUpdate = updateReportsFilter }) => {
   const salePoints = useSalePointsStore((state) => state.salePoints);
   const reportsFilter = useReportsStore((state) => state.reportsFilter);
   const [openDateFrom, setOpenDateFrom] = useState(false);
   const [openDateTo, setOpenDateTo] = useState(false);
 
   const handleSalePointChange = (value) => {
-    updateReportsFilter({ salePointIds: value === ALL_SALE_POINTS ? '' : value });
+    onUpdate({ salePointIds: value === ALL_SALE_POINTS ? '' : value });
   };
 
   return (
@@ -47,7 +48,7 @@ const ReportsFilter = () => {
               disabled={{ after: new Date() }}
               onSelect={(date) => {
                 setOpenDateFrom(false);
-                updateReportsFilter({ from: format(date, 'yyyy-MM-dd') });
+                onUpdate({ from: format(date, 'yyyy-MM-dd') });
               }}
             />
           </PopoverContent>
@@ -70,7 +71,7 @@ const ReportsFilter = () => {
               locale={ru}
               onSelect={(date) => {
                 setOpenDateTo(false);
-                updateReportsFilter({ to: format(date, 'yyyy-MM-dd') });
+                onUpdate({ to: format(date, 'yyyy-MM-dd') });
               }}
             />
           </PopoverContent>

@@ -50,6 +50,7 @@ const DeviceCommandsTypes = () => {
     'stopSale',
     'resumeSale',
     'reloadCatalog',
+    'checkBankChannel',
   ];
   const commandsDevice = [
     'openLatch',

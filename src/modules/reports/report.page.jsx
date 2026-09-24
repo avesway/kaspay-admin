@@ -7,8 +7,11 @@ import { Button } from '@/shared/ui/button';
 import { Card, CardContent } from '@/shared/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 
+import AverageReceipt from './components/averageReceipt/AverageReceipt';
+import HourlyRevenue from './components/hourlyRevenue/HourlyRevenue';
 import ReportsFilter from './components/ReportsFilter';
 import RevenueDynamics from './components/revenueDynamics/RevenueDynamics';
+import WeekdayRevenue from './components/weekdayRevenue/WeekdayRevenue';
 import { getReportsSalePoints, updateGranularity } from './reports.processes';
 import { useReportsStore } from './reports.store';
 
@@ -18,6 +21,9 @@ const GRANULARITY_TABS = [
   { value: 'month', title: 'Месяц' },
 ];
 
+// Отчеты с реализованными экранами (name из каталога)
+const IMPLEMENTED_REPORTS = ['revenueDynamics', 'hourlyRevenue', 'weekdayRevenue', 'averageReceipt'];
+
 const ReportPage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -25,9 +31,11 @@ const ReportPage = () => {
   const granularity = useReportsStore((state) => state.granularity);
 
   const isRevenueDynamics = report?.name === 'revenueDynamics';
+  const isHourlyRevenue = report?.name === 'hourlyRevenue';
+  const isImplemented = IMPLEMENTED_REPORTS.includes(report?.name);
 
   useEffect(() => {
-    if (report?.isAvailable && isRevenueDynamics) {
+    if (report?.isAvailable && isImplemented) {
       getReportsSalePoints();
     }
   }, []);
@@ -44,7 +52,7 @@ const ReportPage = () => {
         <p className="text-muted-foreground">{report?.description || ''}</p>
       </div>
 
-      {(!report?.isAvailable || !isRevenueDynamics) && (
+      {(!report?.isAvailable || !isImplemented) && (
         <Card>
           <CardContent className="text-muted-foreground flex flex-col items-center gap-4 p-16">
             <Construction className="h-12 w-12" />
@@ -71,6 +79,12 @@ const ReportPage = () => {
           <RevenueDynamics />
         </div>
       )}
+
+      {report?.isAvailable && isHourlyRevenue && <HourlyRevenue />}
+
+      {report?.isAvailable && report?.name === 'weekdayRevenue' && <WeekdayRevenue />}
+
+      {report?.isAvailable && report?.name === 'averageReceipt' && <AverageReceipt />}
     </div>
   );
 };

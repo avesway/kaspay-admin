@@ -101,7 +101,7 @@ const DevicesList = () => {
                             {controllerDevice.type.description}
                           </span>
                         </div>
-                        <div>{deviceStatusBadge(controllerDevice.statusType)}</div>
+                        {/* <div>{deviceStatusBadge(controllerDevice.statusType)}</div> */}
                         <div>
                           {deviceMatrixBadge(
                             controllerDevice?.deviceProductMatrixPriceList?.matrixId,

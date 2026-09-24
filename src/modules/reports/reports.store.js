@@ -16,13 +16,30 @@ export const useReportsStore = create((set, get) => ({
     salePointIds: '',
   },
 
+  hourlyRevenue: null,
+
+  hourlyFilter: {
+    date: format(new Date(), 'yyyy-MM-dd'),
+    salePointIds: '',
+  },
+
+  weekdayRevenue: null,
+
+  averageReceipt: null,
+
   loading: {
     list: false,
     revenueDynamics: false,
+    hourlyRevenue: false,
+    weekdayRevenue: false,
+    averageReceipt: false,
   },
   error: {
     list: false,
     revenueDynamics: false,
+    hourlyRevenue: false,
+    weekdayRevenue: false,
+    averageReceipt: false,
   },
 
   setReports: (reports) => set({ reports }),
@@ -30,6 +47,10 @@ export const useReportsStore = create((set, get) => ({
   setRevenueDynamics: (revenueDynamics) => set({ revenueDynamics }),
   setGranularity: (granularity) => set({ granularity }),
   setReportsFilter: (data) => set({ reportsFilter: { ...get().reportsFilter, ...data } }),
+  setHourlyRevenue: (hourlyRevenue) => set({ hourlyRevenue }),
+  setHourlyFilter: (data) => set({ hourlyFilter: { ...get().hourlyFilter, ...data } }),
+  setWeekdayRevenue: (weekdayRevenue) => set({ weekdayRevenue }),
+  setAverageReceipt: (averageReceipt) => set({ averageReceipt }),
   setLoading: (data) => set({ loading: { ...get().loading, ...data } }),
   setError: (data) => set({ error: { ...get().error, ...data } }),
 }));

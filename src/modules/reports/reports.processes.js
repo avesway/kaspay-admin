@@ -91,3 +91,104 @@ export async function updateGranularity(granularity) {
   setGranularity(granularity);
   await getRevenueDynamics(granularity);
 }
+
+export async function getHourlyRevenue() {
+  const { hourlyFilter, setHourlyRevenue, setLoading, setError } = useReportsStore.getState();
+
+  setLoading({ hourlyRevenue: true });
+
+  const params = new URLSearchParams();
+  params.append('date', hourlyFilter.date);
+  if (hourlyFilter.salePointIds) params.append('salePointIds', hourlyFilter.salePointIds);
+
+  const data = await reportsAPI
+    .getHourlyRevenue(`?${params.toString()}`)
+    .then((res) => {
+      setHourlyRevenue(res);
+      setError({ hourlyRevenue: false });
+      return res;
+    })
+    .catch(() => {
+      setError({ hourlyRevenue: true });
+      toast.error('Ошибка получения отчета', { position: 'top-center' });
+      return null;
+    })
+    .finally(() => setLoading({ hourlyRevenue: false }));
+
+  return data;
+}
+
+export async function updateHourlyFilter(data) {
+  const { setHourlyFilter } = useReportsStore.getState();
+
+  setHourlyFilter(data);
+  await getHourlyRevenue();
+}
+
+export async function getWeekdayRevenue() {
+  const { reportsFilter, setWeekdayRevenue, setLoading, setError } = useReportsStore.getState();
+
+  setLoading({ weekdayRevenue: true });
+
+  const params = new URLSearchParams();
+  params.append('from', reportsFilter.from);
+  if (reportsFilter.to) params.append('to', reportsFilter.to);
+  if (reportsFilter.salePointIds) params.append('salePointIds', reportsFilter.salePointIds);
+
+  const data = await reportsAPI
+    .getWeekdayRevenue(`?${params.toString()}`)
+    .then((res) => {
+      setWeekdayRevenue(res);
+      setError({ weekdayRevenue: false });
+      return res;
+    })
+    .catch(() => {
+      setError({ weekdayRevenue: true });
+      toast.error('Ошибка получения отчета', { position: 'top-center' });
+      return null;
+    })
+    .finally(() => setLoading({ weekdayRevenue: false }));
+
+  return data;
+}
+
+export async function updateWeekdayFilter(data) {
+  const { setReportsFilter } = useReportsStore.getState();
+
+  setReportsFilter(data);
+  await getWeekdayRevenue();
+}
+
+export async function getAverageReceipt() {
+  const { reportsFilter, setAverageReceipt, setLoading, setError } = useReportsStore.getState();
+
+  setLoading({ averageReceipt: true });
+
+  const params = new URLSearchParams();
+  params.append('from', reportsFilter.from);
+  if (reportsFilter.to) params.append('to', reportsFilter.to);
+  if (reportsFilter.salePointIds) params.append('salePointIds', reportsFilter.salePointIds);
+
+  const data = await reportsAPI
+    .getAverageReceipt(`?${params.toString()}`)
+    .then((res) => {
+      setAverageReceipt(res);
+      setError({ averageReceipt: false });
+      return res;
+    })
+    .catch(() => {
+      setError({ averageReceipt: true });
+      toast.error('Ошибка получения отчета', { position: 'top-center' });
+      return null;
+    })
+    .finally(() => setLoading({ averageReceipt: false }));
+
+  return data;
+}
+
+export async function updateAverageReceiptFilter(data) {
+  const { setReportsFilter } = useReportsStore.getState();
+
+  setReportsFilter(data);
+  await getAverageReceipt();
+}

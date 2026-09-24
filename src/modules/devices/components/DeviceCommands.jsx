@@ -18,11 +18,11 @@ const columnsTableCommands = [
     header: 'ID',
   },
   {
-    accessorKey: 'description',
+    accessorKey: 'type',
     header: 'Команда',
   },
   {
-    accessorKey: 'statusMessage',
+    accessorKey: 'name',
     header: 'Описание',
   },
   {
