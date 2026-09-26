@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
-import { AlertTriangle, CircleAlert, Loader2, Package, PackageX, TrendingDown, Warehouse } from 'lucide-react';
+import { AlertTriangle, CircleAlert, Loader2, Package, PackageX, Store, TrendingDown, Warehouse } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 
+import SalePointsTable from '@/modules/salePoints/components/SalePointsTable';
 import AppTable from '@/shared/AppTable';
 import Pagination from '@/shared/Pagination';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
@@ -82,22 +83,6 @@ const columnsProductsSalePoint = [
   },
 ];
 
-const columnsProductsDevice = [
-  ...columnsProducts,
-  {
-    id: 'actions',
-    header: 'Действия',
-    cell: ({ row }) => {
-      const product = row.original;
-      return (
-        <div className="flex flex-row gap-3">
-          <StorageBalanceOperationProduct product={product} />
-        </div>
-      );
-    },
-  },
-];
-
 const tabs = [
   {
     id: 1,
@@ -113,10 +98,10 @@ const tabs = [
   {
     id: 2,
     tab: 'salePoint',
-    icon: Package,
+    icon: Store,
     className: 'text-primary',
-    nameTab: 'Точки продаж',
-    nameTable: 'Точки продаж',
+    nameTab: 'Мини-склад',
+    nameTable: 'Мини склад',
     storageTypes: ['salePoint'],
     balanceTypes: 'inStock',
     columnsTable: columnsProductsSalePoint,
@@ -126,11 +111,11 @@ const tabs = [
     tab: 'device',
     icon: Package,
     className: 'text-primary',
-    nameTab: 'Устройства',
-    nameTable: 'Устройства продаж',
+    nameTab: 'Точки продаж',
+    nameTable: 'Точки продаж',
     storageTypes: ['device'],
     balanceTypes: 'inStock',
-    columnsTable: columnsProductsDevice,
+    table: 'salePoints',
   },
   {
     id: 4,
@@ -181,11 +166,11 @@ const ProductsBalances = () => {
   );
 
   useEffect(() => {
-    if (contentTab) {
-      const storageTypes = contentTab.storageTypes.map((item) => `storageTypes=${item}&`).join('');
-      setParamsRequest(`${storageTypes}balanceTypes=${contentTab.balanceTypes}`);
-      getProductsBalances();
-    }
+    if (!contentTab || contentTab.table === 'salePoints') return;
+
+    const storageTypes = contentTab.storageTypes.map((item) => `storageTypes=${item}&`).join('');
+    setParamsRequest(`${storageTypes}balanceTypes=${contentTab.balanceTypes}`);
+    getProductsBalances();
   }, [contentTab]);
 
   return (
@@ -199,7 +184,7 @@ const ProductsBalances = () => {
       <TabsList>
         {tabs.map((tab) => (
           <TabsTrigger key={tab.id} value={tab.tab}>
-            {<tab.icon />}
+            {<tab.icon className={tab.className} />}
             {tab.nameTab}
           </TabsTrigger>
         ))}
@@ -215,7 +200,9 @@ const ProductsBalances = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {loading.list ? (
+              {tab.table === 'salePoints' ? (
+                <SalePointsTable />
+              ) : loading.list ? (
                 <div className="mt-5 flex justify-center">
                   <Loader2 className="animate-spin" color="var(--color-primary)" />
                 </div>

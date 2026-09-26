@@ -8,7 +8,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { priceRoundedKopecks, priceRoundedRubles } from '@/helpers/priceHelpers';
 import { getTemplatesMatrices } from '@/modules/products/matrices/matrices.processes';
 import { useMatricesStore } from '@/modules/products/matrices/matrices.store';
-import { getProductsCatalog } from '@/modules/products/productsCatalog/productsCatalog.processes';
+import { getProductsSingle } from '@/modules/products/productsSingle/catalog/productsSingle.processes';
 import { Button } from '@/shared/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
@@ -69,7 +69,7 @@ const PriceListForm = ({ openForm, setOpenForm }) => {
 
   useEffect(() => {
     getTemplatesMatrices();
-    getProductsCatalog();
+    getProductsSingle();
   }, []);
 
   useEffect(() => {

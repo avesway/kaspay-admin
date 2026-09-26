@@ -5,11 +5,11 @@ import { Button } from '@/shared/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/ui/dialog';
 
 import ProductForm from './ProductForm';
-import { useProductsCatalogStore } from '../productsCatalog.store';
+import { useProductsSingleStore } from '../productsSingle.store';
 
 const ProductUpdate = ({ product }) => {
   const [open, setOpen] = useState(false);
-  const loading = useProductsCatalogStore((state) => state.loading);
+  const loading = useProductsSingleStore((state) => state.loading);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

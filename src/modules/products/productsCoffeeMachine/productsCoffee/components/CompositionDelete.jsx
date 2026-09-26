@@ -13,25 +13,25 @@ import {
   DialogTrigger,
 } from '@/shared/ui/dialog';
 
-import { deleteProductSingle } from '../productsSingle.processes';
-import { useProductsSingleStore } from '../productsSingle.store';
+import { deleteComposition } from '../productsCoffee.processes';
+import { useProductsCoffeeStore } from '../productsCoffee.store';
 
-const ProductDelete = ({ product }) => {
+const CompositionDelete = ({ composition }) => {
   const [open, setOpen] = useState(false);
-  const loading = useProductsSingleStore((state) => state.loading);
+  const loading = useProductsCoffeeStore((state) => state.loading);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive" size="icon" className="bg-destructive/60 h-8 w-8">
-          <Trash2 className="size-4" color="white" />
+        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive h-8 w-8">
+          <Trash2 className="size-4" />
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Удалить товар?</DialogTitle>
+          <DialogTitle>Удалить рецепт?</DialogTitle>
           <DialogDescription>
-            {`Вы действительно хотите удалить товар ${product.name}? Это действие нельзя отменить.`}
+            {`Вы действительно хотите удалить рецепт напитка ${composition.name}? Это действие нельзя отменить.`}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="mt-5 sm:justify-start">
@@ -44,7 +44,7 @@ const ProductDelete = ({ product }) => {
             variant="destructive"
             disabled={loading.delete}
             className="ml-auto"
-            onClick={() => deleteProductSingle(product.id, setOpen)}
+            onClick={() => deleteComposition(composition.id, setOpen)}
           >
             Удалить
             {loading.delete && <Loader2 className="animate-spin" />}
@@ -55,4 +55,4 @@ const ProductDelete = ({ product }) => {
   );
 };
 
-export default ProductDelete;
+export default CompositionDelete;

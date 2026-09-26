@@ -1,6 +1,6 @@
 import instanceAxios from '@/config/axios';
 
-export const productsCatalogAPI = {
+export const productsSingleAPI = {
   getListProducts: async (params) => {
     const response = await instanceAxios.get(`products?${params}`);
     return response?.data;

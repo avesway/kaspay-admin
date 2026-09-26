@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 
-import { productsCatalogAPI } from './productsCatalog.api';
+import { productsSingleAPI } from './productsSingle.api';
 
 export const PRODUCT_IMAGE_MAX_SIZE_MB = 1;
 export const PRODUCT_IMAGE_ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/jpg'];
@@ -26,12 +26,12 @@ export function readProductImagePreview(file) {
 }
 
 export async function loadProductImage(imagePath) {
-  const blob = await productsCatalogAPI.getImageProduct(imagePath);
+  const blob = await productsSingleAPI.getImageProduct(imagePath);
   return URL.createObjectURL(blob);
 }
 
 export async function deleteProductImage(productId, imagePath) {
-  await productsCatalogAPI.deleteImageProduct(productId, imagePath).catch(() => {
+  await productsSingleAPI.deleteImageProduct(productId, imagePath).catch(() => {
     toast.error('Ошибка удаления изображения', { position: 'top-center' });
   });
 }
@@ -39,7 +39,7 @@ export async function deleteProductImage(productId, imagePath) {
 export async function createImageProduct(productId, image) {
   const formData = new FormData();
   formData.append('file', image);
-  await productsCatalogAPI.createImageProduct(productId, formData).catch(() => {
+  await productsSingleAPI.createImageProduct(productId, formData).catch(() => {
     toast.error('Ошибка изменения изображения', { position: 'top-center' });
   });
 }

@@ -21,7 +21,7 @@ src/
   lib/utils.js cn()
   shared/      AppTable, Pagination, AppSidebar, AppHeader, layouts/, ui/
   modules/
-    auth/  profile/  products/ (productsCatalog, productsBalances, productsCoffeeMachine, matrices)
+    auth/  profile/  products/ (productsSingle/ (catalog, categories), productsBalances, productsCoffeeMachine/ (productsComposite, productsCoffee), matrices)
     priceManagement/ (pricesBase, pricesLists)  storages/  saleReports/
     salePoints/  devices/
 ```
@@ -50,7 +50,7 @@ src/
 - Критерий: используется ≥1 модулем и не зависит от домена → shared; иначе — внутрь модуля.
 
 ### Вложенность
-Домены с поддоменами (`products`, `priceManagement`) держат композитную страницу в корне модуля, а полный набор api/store/processes/components — в подпапках поддоменов (`productsCatalog`, `pricesLists`, ...). У подмодуля может быть свой `*.page.jsx` (`matrixTemplate.page.jsx`).
+Домены с поддоменами (`products`, `priceManagement`) держат композитную страницу в корне модуля, а полный набор api/store/processes/components — в подпапках поддоменов (`productsSingle/catalog`, `productsCoffeeMachine/productsCoffee`, `pricesLists`, ...). У подмодуля может быть свой `*.page.jsx` (`matrixTemplate.page.jsx`).
 
 ## Прочие конвенции
 2. **Страницы**: `*.page.jsx` с `export const Component = XxxPage` для `lazy()`. Роуты и меню — через константы `ROUTES`/`MENU`, не хардкод путей.
@@ -70,3 +70,4 @@ src/
 ## Важно
 - Ничего не менять в работающей логике без явной задачи; язык UI и сообщений — русский.
 - Не вводить TypeScript, Redux, react-query — следовать существующим паттернам.
+- Не открывать браузер и не проверять UI самостоятельно (скриншоты, browser automation и т.п.) — пользователь проверяет сам. Никогда не пытаться войти в приложение (логин/подмена токенов) — только по явной просьбе пользователя.

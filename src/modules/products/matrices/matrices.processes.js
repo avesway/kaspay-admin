@@ -2,8 +2,8 @@ import { toast } from 'sonner';
 
 import { matricesAPI } from './matrices.api';
 import { useMatricesStore } from './matrices.store';
-import { getProductsCatalog } from '../productsCatalog/productsCatalog.processes';
-import { useProductsCatalogStore } from '../productsCatalog/productsCatalog.store';
+import { getProductsSingle } from '../productsSingle/catalog/productsSingle.processes';
+import { useProductsSingleStore } from '../productsSingle/catalog/productsSingle.store';
 
 export async function getTemplatesMatrices() {
   const { setTemplates, setPagination, setError, setLoading } = useMatricesStore.getState();
@@ -33,7 +33,7 @@ export function setPaginationMatricesList(size, page) {
 
 export function filledCells() {
   const { activeMatrixRows } = useMatricesStore.getState();
-  const { products } = useProductsCatalogStore.getState();
+  const { products } = useProductsSingleStore.getState();
 
   const data = activeMatrixRows.reduce((acc, row) => {
     const filledColumns = row.columns.filter((col) => col.productId);
@@ -183,7 +183,7 @@ export async function checkingActiveMatrix(matrixId, navigate) {
   }
 
   await getTypesMatrices();
-  await getProductsCatalog();
+  await getProductsSingle();
 
   const activeMatrix = newTemplates.find((template) => template.id === matrixId);
 

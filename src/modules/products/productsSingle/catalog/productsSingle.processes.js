@@ -1,18 +1,18 @@
 import { toast } from 'sonner';
 
 import { createImageProduct } from './productImages.processes';
-import { productsCatalogAPI } from './productsCatalog.api';
-import { useProductsCatalogStore } from './productsCatalog.store';
+import { productsSingleAPI } from './productsSingle.api';
+import { useProductsSingleStore } from './productsSingle.store';
 
-export async function getProductsCatalog(params = '') {
-  const { setProductsCatalog, setPagination, setLoading, pagination } = useProductsCatalogStore.getState();
+export async function getProductsSingle(params = '') {
+  const { setProductsSingle, setPagination, setLoading, pagination } = useProductsSingleStore.getState();
 
   setLoading({ list: true });
 
-  await productsCatalogAPI
+  await productsSingleAPI
     .getListProducts(`size=${pagination.size}&page=${pagination.page}${params ? `&${params}` : ''}`)
     .then((res) => {
-      setProductsCatalog(res.items);
+      setProductsSingle(res.items);
       setPagination({
         totalItems: res.totalItems,
         totalPages: res.totalPages,
@@ -24,15 +24,15 @@ export async function getProductsCatalog(params = '') {
     .finally(() => setLoading({ list: false }));
 }
 
-export async function createProduct(data, setOpen, imageProduct) {
-  const { setLoading } = useProductsCatalogStore.getState();
+export async function createProductSingle(data, setOpen, imageProduct) {
+  const { setLoading } = useProductsSingleStore.getState();
   setLoading({ create: true });
 
-  const product = await productsCatalogAPI
+  const product = await productsSingleAPI
     .createProduct(data)
     .then(async (res) => {
       if (imageProduct) await createImageProduct(res.id, imageProduct);
-      await getProductsCatalog();
+      await getProductsSingle();
       toast.success('Товар успешно добавлен', { position: 'top-center' });
       return res;
     })
@@ -48,21 +48,21 @@ export async function createProduct(data, setOpen, imageProduct) {
   return product;
 }
 
-export function setPaginationProducts(size, page) {
-  const { setPagination } = useProductsCatalogStore.getState();
+export function setPaginationProductsSingle(size, page) {
+  const { setPagination } = useProductsSingleStore.getState();
   setPagination({ size, page });
-  getProductsCatalog();
+  getProductsSingle();
 }
 
-export async function updateProduct(productId, data, setOpen, imageProduct) {
-  const { setLoading } = useProductsCatalogStore.getState();
+export async function updateProductSingle(productId, data, setOpen, imageProduct) {
+  const { setLoading } = useProductsSingleStore.getState();
   setLoading({ update: true });
 
-  const product = await productsCatalogAPI
+  const product = await productsSingleAPI
     .updateProduct(productId, data)
     .then(async (res) => {
       if (imageProduct) await createImageProduct(res.id, imageProduct);
-      await getProductsCatalog();
+      await getProductsSingle();
       toast.success('Товар успешно изменен', { position: 'top-center' });
       return res;
     })
@@ -78,14 +78,14 @@ export async function updateProduct(productId, data, setOpen, imageProduct) {
   return product;
 }
 
-export async function deleteProduct(productId, setOpen) {
-  const { setLoading } = useProductsCatalogStore.getState();
+export async function deleteProductSingle(productId, setOpen) {
+  const { setLoading } = useProductsSingleStore.getState();
   setLoading({ delete: true });
 
-  await productsCatalogAPI
+  await productsSingleAPI
     .deleteProduct(productId)
     .then(async () => {
-      await getProductsCatalog();
+      await getProductsSingle();
       toast.success('Товар успешно удален', { position: 'top-center' });
     })
     .catch(() => {
@@ -98,16 +98,16 @@ export async function deleteProduct(productId, setOpen) {
 }
 
 export async function getCategories() {
-  const { setCategories } = useProductsCatalogStore.getState();
-  await productsCatalogAPI
+  const { setCategories } = useProductsSingleStore.getState();
+  await productsSingleAPI
     .getListCategories()
     .then((res) => setCategories(res))
     .catch(() => {});
 }
 
 export async function getCountries() {
-  const { setCountries } = useProductsCatalogStore.getState();
-  await productsCatalogAPI
+  const { setCountries } = useProductsSingleStore.getState();
+  await productsSingleAPI
     .getListCountries()
     .then((res) => setCountries(res))
     .catch(() => {});

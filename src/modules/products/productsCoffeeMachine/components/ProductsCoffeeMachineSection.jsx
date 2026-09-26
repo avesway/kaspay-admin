@@ -1,11 +1,16 @@
 import { useState } from 'react';
 
-import ProductList from '@/modules/products/productsCatalog/components/ProductList';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 
-import ProductCoffeeMachineCreate from './ProductCoffeeMachineCreate';
-import ProductsCoffeeMachineList from './ProductsCoffeeMachineList';
-import ProductCreate from '../../productsCatalog/components/ProductCreate';
+import CompositionCreate from '../productsCoffee/components/CompositionCreate';
+import CompositionsList from '../productsCoffee/components/CompositionsList';
+import ProductCompositeCreate from '../productsComposite/components/ProductCompositeCreate';
+import ProductsCompositeList from '../productsComposite/components/ProductsCompositeList';
+
+const COFFEE_MACHINE_TABS = [
+  { value: 'products', title: 'Товары' },
+  { value: 'drinks', title: 'Напитки' },
+];
 
 const ProductsCoffeeMachineSection = () => {
   const [activeTab, setActiveTab] = useState('products');
@@ -20,18 +25,11 @@ const ProductsCoffeeMachineSection = () => {
       </div>
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger
-            className="data-[state=active]:border-primary rounded-none border-0 border-b-2 border-transparent px-3 pb-2 data-[state=active]:bg-transparent"
-            value="products"
-          >
-            Товары
-          </TabsTrigger>
-          <TabsTrigger
-            className="data-[state=active]:border-primary rounded-none border-0 border-b-2 border-transparent px-3 pb-2 data-[state=active]:bg-transparent"
-            value="drinks"
-          >
-            Напитки
-          </TabsTrigger>
+          {COFFEE_MACHINE_TABS.map((tab) => (
+            <TabsTrigger key={tab.value} value={tab.value}>
+              {tab.title}
+            </TabsTrigger>
+          ))}
         </TabsList>
 
         <TabsContent value="products">
@@ -40,9 +38,9 @@ const ProductsCoffeeMachineSection = () => {
               <h2 className="text-xl font-semibold">Ресурсы для кофемашины</h2>
               <p className="text-muted-foreground text-[14px]">Кофе, молоко, стаканы и другие расходники</p>
             </div>
-            <ProductCoffeeMachineCreate />
+            <ProductCompositeCreate purposeType="composite" purposeTypes="composite" />
           </div>
-          <ProductsCoffeeMachineList />
+          <ProductsCompositeList purposeTypes="composite" />
         </TabsContent>
 
         <TabsContent value="drinks">
@@ -51,9 +49,9 @@ const ProductsCoffeeMachineSection = () => {
               <h2 className="text-xl font-semibold">Напитки</h2>
               <p className="text-muted-foreground text-[14px]">Рецепты напитков с указанием используемых ресурсов</p>
             </div>
-            <ProductCreate />
+            <CompositionCreate />
           </div>
-          <ProductList />
+          <CompositionsList />
         </TabsContent>
       </Tabs>
     </>

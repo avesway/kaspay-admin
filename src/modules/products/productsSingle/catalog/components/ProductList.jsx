@@ -9,11 +9,11 @@ import { Card, CardContent, CardHeader } from '@/shared/ui/card';
 import ProductDelete from './ProductDelete';
 import ProductImageCell from './ProductImageCell';
 import ProductUpdate from './ProductUpdate';
-import { getProductsCatalog, setPaginationProducts } from '../productsCatalog.processes';
-import { useProductsCatalogStore } from '../productsCatalog.store';
+import { getProductsSingle, setPaginationProductsSingle } from '../productsSingle.processes';
+import { useProductsSingleStore } from '../productsSingle.store';
 
 const ProductList = () => {
-  const { products, pagination } = useProductsCatalogStore(
+  const { products, pagination } = useProductsSingleStore(
     useShallow((state) => ({
       products: state.products,
       pagination: state.pagination,
@@ -21,7 +21,7 @@ const ProductList = () => {
   );
 
   useEffect(() => {
-    getProductsCatalog();
+    getProductsSingle();
   }, []);
 
   const columns = [
@@ -87,7 +87,7 @@ const ProductList = () => {
       </CardHeader>
       <CardContent>
         <AppTable data={products} columns={columns} paginationRequest={pagination} />
-        <Pagination pagination={pagination} setPagination={setPaginationProducts} />
+        <Pagination pagination={pagination} setPagination={setPaginationProductsSingle} />
       </CardContent>
     </Card>
   );

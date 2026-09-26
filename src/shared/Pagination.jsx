@@ -1,13 +1,14 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+
 import { Button } from '@/shared/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/shared/ui/select';
 
 const Pagination = ({ pagination, setPagination }) => {
   return (
-    <div className="flex items-center justify-end gap-10 mt-10 max-sm:flex-col max-sm:gap-3">
+    <div className="mt-10 flex items-center justify-end gap-10 max-sm:flex-col max-sm:gap-3">
       <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground max-sm:text-xs">Показать:</span>
+        <span className="text-muted-foreground text-sm max-sm:text-xs">Показать:</span>
         <Select value={pagination.size} onValueChange={(v) => setPagination(v, pagination.page)} className="h-6 w-16">
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Показать" />
@@ -22,11 +23,11 @@ const Pagination = ({ pagination, setPagination }) => {
             </SelectGroup>
           </SelectContent>
         </Select>
-        <span className="text-sm text-muted-foreground max-sm:text-xs">записей</span>
+        <span className="text-muted-foreground text-sm max-sm:text-xs">записей</span>
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground max-sm:text-xs">
+        <span className="text-muted-foreground text-sm max-sm:text-xs">
           Страница {pagination.page} из {pagination.totalPages}
         </span>
 
@@ -49,7 +50,7 @@ const Pagination = ({ pagination, setPagination }) => {
               const showEllipsis = index > 0 && array[index - 1] !== page - 1;
               return (
                 <React.Fragment key={page}>
-                  {showEllipsis && <span className="px-2 text-muted-foreground">...</span>}
+                  {showEllipsis && <span className="text-muted-foreground px-2">...</span>}
                   <Button
                     variant={pagination.page === page ? 'default' : 'outline'}
                     size="sm"

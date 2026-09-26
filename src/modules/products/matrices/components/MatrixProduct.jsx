@@ -11,8 +11,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/shared/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from '@/shared/ui/select';
 
-import { getProductsCatalog } from '../../productsCatalog/productsCatalog.processes';
-import { useProductsCatalogStore } from '../../productsCatalog/productsCatalog.store';
+import { getProductsSingle } from '../../productsSingle/catalog/productsSingle.processes';
+import { useProductsSingleStore } from '../../productsSingle/catalog/productsSingle.store';
 import { useMatricesStore } from '../matrices.store';
 
 const matrixProductSchema = z.object({
@@ -21,7 +21,7 @@ const matrixProductSchema = z.object({
 });
 
 const MatrixProduct = ({ open, setOpen, isUpdate }) => {
-  const products = useProductsCatalogStore((state) => state.products);
+  const products = useProductsSingleStore((state) => state.products);
   const { activeColumn, activeMatrixRows, setActiveMatrixRows, error, setError } = useMatricesStore(
     useShallow((state) => ({
       activeColumn: state.activeColumn,
@@ -35,7 +35,7 @@ const MatrixProduct = ({ open, setOpen, isUpdate }) => {
   const [isShowBtnCleanData, setShowBtnCleanData] = useState(false);
 
   useEffect(() => {
-    if (open) getProductsCatalog();
+    if (open) getProductsSingle();
   }, [open]);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const MatrixProduct = ({ open, setOpen, isUpdate }) => {
 
   async function handleSearchProduct(value) {
     setSearchProduct(value);
-    getProductsCatalog(`size=50&page=1&shortName=${value}`);
+    getProductsSingle(`size=50&page=1&shortName=${value}`);
   }
 
   function addingProduct(data) {

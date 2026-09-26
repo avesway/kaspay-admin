@@ -4,11 +4,11 @@ import { useLocation } from 'react-router';
 import { PAGE_TITLES } from '@/constants/routes';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 
-//import ProductsCoffeeMachineSection from './components/productsCoffeeMachine/ProductsCoffeeMachineSection';
-import CategoriesSection from './categories/components/CategoriesSection';
 import MatricesSection from './matrices/components/MatricesSection';
-import ProductCreate from './productsCatalog/components/ProductCreate';
-import ProductList from './productsCatalog/components/ProductList';
+import ProductsCoffeeMachineSection from './productsCoffeeMachine/components/ProductsCoffeeMachineSection';
+import ProductCreate from './productsSingle/catalog/components/ProductCreate';
+import ProductList from './productsSingle/catalog/components/ProductList';
+import CategoriesSection from './productsSingle/categories/components/CategoriesSection';
 
 function ProductsPage() {
   const { pathname, state } = useLocation();
@@ -25,22 +25,18 @@ function ProductsPage() {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="products">Товары</TabsTrigger>
-          {/* <TabsTrigger value="coffeeMachineProducts">Товары для кофемашины</TabsTrigger> */}
+          <TabsTrigger value="coffeeMachineProducts">Товары для кофемашины</TabsTrigger>
           <TabsTrigger value="matrix-templates">Шаблоны матриц</TabsTrigger>
         </TabsList>
 
         <TabsContent value="products">
           <Tabs value={activeCatalogTab} onValueChange={setActiveCatalogTab}>
-            <TabsList className="h-auto w-full justify-start gap-6 rounded-none border-none bg-transparent p-0 shadow-none">
+            <TabsList>
               {[
                 { value: 'catalog', title: 'Каталог товаров' },
                 { value: 'categories', title: 'Категории' },
               ].map((tab) => (
-                <TabsTrigger
-                  key={tab.value}
-                  value={tab.value}
-                  className="data-[state=active]:border-primary h-auto flex-none rounded-none border-0 border-b-2 border-transparent bg-transparent px-1 pb-3 pt-2 text-base font-semibold shadow-none data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:shadow-none"
-                >
+                <TabsTrigger key={tab.value} value={tab.value}>
                   {tab.title}
                 </TabsTrigger>
               ))}
@@ -60,7 +56,9 @@ function ProductsPage() {
           </Tabs>
         </TabsContent>
 
-        <TabsContent value="coffeeMachineProducts">{/* <ProductsCoffeeMachineSection /> */}</TabsContent>
+        <TabsContent value="coffeeMachineProducts">
+          <ProductsCoffeeMachineSection />
+        </TabsContent>
 
         <TabsContent value="matrix-templates">
           <MatricesSection />

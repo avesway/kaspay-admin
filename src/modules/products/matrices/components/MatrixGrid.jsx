@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 
 import MatrixGridRow from './MatrixGridRow';
 import MatrixProduct from './MatrixProduct';
-import { useProductsCatalogStore } from '../../productsCatalog/productsCatalog.store';
+import { useProductsSingleStore } from '../../productsSingle/catalog/productsSingle.store';
 import { useMatricesStore } from '../matrices.store';
 
 const MatrixGrid = ({ isUpdate }) => {
@@ -21,7 +21,7 @@ const MatrixGrid = ({ isUpdate }) => {
       setActiveColumn: state.setActiveColumn,
     })),
   );
-  const products = useProductsCatalogStore((state) => state.products);
+  const products = useProductsSingleStore((state) => state.products);
   const [isOpenDialogProduct, setOpenDialogProduct] = useState(false);
 
   function addRow() {

@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 
-export const useProductsCoffeeMachineStore = create((set, get) => ({
+export const useProductsCompositeStore = create((set, get) => ({
   products: [],
+  purposeTypes: '',
   pagination: {
     size: 10,
     page: 1,
@@ -16,6 +17,7 @@ export const useProductsCoffeeMachineStore = create((set, get) => ({
   },
 
   setProducts: (products) => set({ products }),
+  setPurposeTypes: (purposeTypes) => set({ purposeTypes }),
   setLoading: (data) => set({ loading: { ...get().loading, ...data } }),
   setPagination: (data) => set({ pagination: { ...get().pagination, ...data } }),
 }));

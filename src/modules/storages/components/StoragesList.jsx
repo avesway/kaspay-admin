@@ -16,7 +16,7 @@ const StoragesList = () => {
   );
 
   useEffect(() => {
-    getListStorages();
+    getListStorages('storageTypes=warehouse');
   }, []);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const StoragesList = () => {
   }, [storages]);
 
   return (
-    <div className="my-5 flex flex-row flex-wrap gap-5">
+    <div className="my-5 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
       {storages.map((item) => (
         <StorageItem key={item.id} storage={item} loading={loading.listStorages} />
       ))}

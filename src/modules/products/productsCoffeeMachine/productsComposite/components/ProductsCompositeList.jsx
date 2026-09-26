@@ -2,25 +2,27 @@ import React, { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 import { cn } from '@/lib/utils';
-import { useProductsCoffeeMachineStore } from '@/modules/products/store';
 import AppTable from '@/shared/AppTable';
 import Pagination from '@/shared/Pagination';
 import { Card, CardContent, CardHeader } from '@/shared/ui/card';
 
-import ProductImageCell from '../../productsCatalog/components/ProductImageCell';
-import { getProductsCatalog, setPaginationProducts } from '../../productsCatalog/productsCatalog.processes';
+import ProductImageCell from '../../../productsSingle/catalog/components/ProductImageCell';
+import { getProductsComposite, setPaginationProductsComposite } from '../productsComposite.processes';
+import { useProductsCompositeStore } from '../productsComposite.store';
 
-const ProductsCoffeeMachineList = () => {
-  const { products, pagination } = useProductsCoffeeMachineStore(
+const ProductsCompositeList = ({ purposeTypes }) => {
+  const { products, pagination, setPagination } = useProductsCompositeStore(
     useShallow((state) => ({
       products: state.products,
       pagination: state.pagination,
+      setPagination: state.setPagination,
     })),
   );
 
   useEffect(() => {
-    getProductsCatalog();
-  }, []);
+    setPagination({ page: 1 });
+    getProductsComposite(purposeTypes);
+  }, [purposeTypes]);
 
   const columns = [
     {
@@ -35,7 +37,7 @@ const ProductsCoffeeMachineList = () => {
     },
     {
       accessorKey: 'name',
-      header: 'Полное название',
+      header: 'Название',
       cell: ({ getValue }) => <span className="text-sm">{getValue()}</span>,
     },
     {
@@ -52,16 +54,6 @@ const ProductsCoffeeMachineList = () => {
         </span>
       ),
     },
-    // {
-    //   id: 'actions',
-    //   header: 'Действия',
-    //   cell: ({ row }) => (
-    //     <div className="flex items-center gap-2">
-    //       <ProductUpdate product={row.original} />
-    //       <ProductDelete product={row.original} />
-    //     </div>
-    //   ),
-    // },
   ];
 
   return (
@@ -71,10 +63,10 @@ const ProductsCoffeeMachineList = () => {
       </CardHeader>
       <CardContent>
         <AppTable data={products} columns={columns} paginationRequest={pagination} />
-        <Pagination pagination={pagination} setPagination={setPaginationProducts} />
+        <Pagination pagination={pagination} setPagination={setPaginationProductsComposite} />
       </CardContent>
     </Card>
   );
 };
 
-export default ProductsCoffeeMachineList;
+export default ProductsCompositeList;

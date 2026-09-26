@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export const useProductsCatalogStore = create((set, get) => ({
+export const useProductsSingleStore = create((set, get) => ({
   products: [],
   categories: [],
   countries: [],
@@ -19,7 +19,7 @@ export const useProductsCatalogStore = create((set, get) => ({
     delete: false,
   },
 
-  setProductsCatalog: (products) => set({ products }),
+  setProductsSingle: (products) => set({ products }),
   setCategories: (categories) => set({ categories }),
   setCountries: (countries) => set({ countries }),
   setLoading: (data) => set({ loading: { ...get().loading, ...data } }),

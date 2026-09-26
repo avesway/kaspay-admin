@@ -6,7 +6,7 @@ import { GripVertical, Plus, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/shared/ui/button';
 
-import ProductImageCell from '../../productsCatalog/components/ProductImageCell';
+import ProductImageCell from '../../productsSingle/catalog/components/ProductImageCell';
 
 const MatrixGridColumn = ({
   col,

@@ -4,12 +4,12 @@ import { Plus } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/ui/dialog';
 
-import ProductCaffeeMachineForm from './ProductCoffeeMachineForm';
-import { useProductsCoffeeMachineStore } from '../productsCoffeeMachine.store';
+import ProductCompositeForm from './ProductCompositeForm';
+import { useProductsCompositeStore } from '../productsComposite.store';
 
-const ProductCoffeeMachineCreate = () => {
+const ProductCompositeCreate = ({ purposeType, purposeTypes }) => {
   const [open, setOpen] = useState(false);
-  const loading = useProductsCoffeeMachineStore((state) => state.loading);
+  const loading = useProductsCompositeStore((state) => state.loading);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -24,10 +24,16 @@ const ProductCoffeeMachineCreate = () => {
           <DialogTitle>Добавить товар</DialogTitle>
           <DialogDescription>Создайте новую карточку товара</DialogDescription>
         </DialogHeader>
-        <ProductCaffeeMachineForm loading={loading.create} type="create" setOpen={setOpen} />
+        <ProductCompositeForm
+          loading={loading.create}
+          type="create"
+          purposeType={purposeType}
+          purposeTypes={purposeTypes}
+          setOpen={setOpen}
+        />
       </DialogContent>
     </Dialog>
   );
 };
 
-export default ProductCoffeeMachineCreate;
+export default ProductCompositeCreate;

@@ -9,8 +9,8 @@ import * as z from 'zod';
 import { useShallow } from 'zustand/react/shallow';
 
 import { priceRoundedKopecks, priceRoundedRubles } from '@/helpers/priceHelpers';
-import { getProductsCatalog } from '@/modules/products/productsCatalog/productsCatalog.processes';
-import { useProductsCatalogStore } from '@/modules/products/productsCatalog/productsCatalog.store';
+import { getProductsSingle } from '@/modules/products/productsSingle/catalog/productsSingle.processes';
+import { useProductsSingleStore } from '@/modules/products/productsSingle/catalog/productsSingle.store';
 import { storagesAPI } from '@/modules/storages/storages.api';
 import { getListSuppliers, registerProducStorage } from '@/modules/storages/storages.processes';
 import { Button } from '@/shared/ui/button';
@@ -87,7 +87,7 @@ const StorageRegisterProduct = () => {
   const [openDate, setOpenDate] = useState(false);
   const [openDateProduction, setOpenDateProduction] = useState({});
   const [searchProduct, setSearchProduct] = useState('');
-  const products = useProductsCatalogStore((state) => state.products);
+  const products = useProductsSingleStore((state) => state.products);
   const { suppliers, storages } = useStoragesStore(
     useShallow((state) => ({ suppliers: state.suppliers, storages: state.storages })),
   );
@@ -113,7 +113,7 @@ const StorageRegisterProduct = () => {
   useEffect(() => {
     if (open) {
       getListSuppliers();
-      getProductsCatalog();
+      getProductsSingle();
       if (!fields.length) handleAddRow();
     }
   }, [open]);
@@ -138,9 +138,13 @@ const StorageRegisterProduct = () => {
     });
   };
 
+  //   поле	тип	правила
+  // unitAmount	long ≥1	объём/вес одной единицы товара
+  // unitAmountType ----  единицы измерения товара
+
   const handleSearchProduct = async (value) => {
     setSearchProduct(value);
-    getProductsCatalog(`size=50&page=1&shortName=${value}`);
+    getProductsSingle(`size=50&page=1&shortName=${value}`);
   };
 
   const handlePriceChange = async (index) => {
@@ -440,7 +444,7 @@ const StorageRegisterProduct = () => {
                         render={({ field: { onChange, value } }) => (
                           <FormItem className="max-w-[10%] min-w-[7%]">
                             <FormLabel className="gap-1">
-                              Кол-во<span className="text-destructive">*</span>
+                              Кол-во единиц товара<span className="text-destructive">*</span>
                             </FormLabel>
                             <FormControl>
                               <Input

@@ -10,7 +10,7 @@ import { Button } from '@/shared/ui/button';
 import { Card, CardContent, CardHeader } from '@/shared/ui/card';
 
 import MatrixDeactivation from './MatrixDeactivation';
-import { getProductsCatalog } from '../../productsCatalog/productsCatalog.processes';
+import { getProductsSingle } from '../../productsSingle/catalog/productsSingle.processes';
 import { setPaginationMatricesList } from '../matrices.processes';
 import { useMatricesStore } from '../matrices.store';
 
@@ -31,7 +31,7 @@ const MatricesList = () => {
 
     setActiveMatrix(activeMatrix);
     setActiveMatrixRows(activeMatrix.rows);
-    getProductsCatalog();
+    getProductsSingle();
     navigate(`/products/matrix-templates/${matrixId}`);
   }
 

@@ -11,9 +11,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/shared/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
 
-//import useProductCoffeeMachineForm from '../../hooks/useProductCoffeeMachineForm';
-import { getCategories, getCountries } from '../../productsCatalog/productsCatalog.processes';
-import { useProductsCatalogStore } from '../../productsCatalog/productsCatalog.store';
+import { getCategories } from '../../../productsSingle/catalog/productsSingle.processes';
+import { useProductsSingleStore } from '../../../productsSingle/catalog/productsSingle.store';
+import useProductCompositeForm from '../hooks/useProductCompositeForm';
 
 const productSchema = z.object({
   shortName: z.string().min(1, 'Обязательно для заполнения'),
@@ -23,7 +23,7 @@ const productSchema = z.object({
   weight: z.preprocess((val) => Number(val), z.number().min(1, { message: 'Вес должен быть минимум 1' })),
 });
 
-const ProductCaffeeMachineForm = ({ loading, type, product, setOpen }) => {
+const ProductCompositeForm = ({ loading, type, product, purposeType, purposeTypes, setOpen }) => {
   const form = useForm({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -35,18 +35,16 @@ const ProductCaffeeMachineForm = ({ loading, type, product, setOpen }) => {
     },
   });
 
-  // const { imagePreviewProduct, imageProduct, imageError, fileInputRef, updatePhoto, deletePhoto, selectImage, handleSubmit } =
-  //   useProductCoffeeMachineForm(product, type, setOpen);
-  const { categories, countries } = useProductsCatalogStore(
+  const { imagePreviewProduct, imageProduct, imageError, fileInputRef, updatePhoto, deletePhoto, selectImage, handleSubmit } =
+    useProductCompositeForm(product, type, purposeType, purposeTypes, setOpen);
+  const { categories } = useProductsSingleStore(
     useShallow((state) => ({
       categories: state.categories,
-      countries: state.countries,
     })),
   );
 
   useEffect(() => {
     getCategories();
-    getCountries();
   }, []);
 
   return (
@@ -61,7 +59,7 @@ const ProductCaffeeMachineForm = ({ loading, type, product, setOpen }) => {
                 Полное название (как в накладной)<span className="text-destructive">*</span>
               </FormLabel>
               <FormControl>
-                <Input placeholder="Coca-Cola Classic газированный напиток 0.5л" type="input" {...field} />
+                <Input placeholder="Кофе зерно Arabica 1кг" type="input" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -77,7 +75,7 @@ const ProductCaffeeMachineForm = ({ loading, type, product, setOpen }) => {
                   Короткое название (отображение на терминале)<span className="text-destructive">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="Coca-Cola 0.5л" type="input" {...field} />
+                  <Input placeholder="Кофе зерно" type="input" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -99,7 +97,7 @@ const ProductCaffeeMachineForm = ({ loading, type, product, setOpen }) => {
             )}
           />
         </div>
-        <div className="grid grid-cols-3 gap-5">
+        <div className="grid grid-cols-2 gap-5">
           <FormField
             control={form.control}
             name="categoryId"
@@ -188,4 +186,4 @@ const ProductCaffeeMachineForm = ({ loading, type, product, setOpen }) => {
   );
 };
 
-export default ProductCaffeeMachineForm;
+export default ProductCompositeForm;

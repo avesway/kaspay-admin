@@ -1,8 +1,10 @@
 import React from 'react';
-import { SidebarMenuButton, useSidebar } from './ui/sidebar';
 import { useLocation } from 'react-router';
+import { Link } from 'react-router';
+
 import { cn } from '@/lib/utils';
-import { NavLink, Link } from 'react-router';
+
+import { SidebarMenuButton, useSidebar } from './ui/sidebar';
 
 const AppSidebarActiveMenu = ({ href, icon, title }) => {
   const { pathname } = useLocation();
@@ -34,4 +36,3 @@ const AppSidebarActiveMenu = ({ href, icon, title }) => {
 };
 
 export default AppSidebarActiveMenu;
-//color={isActive ? 'var(--color-primary-light)' : 'var(--color-primary)'}

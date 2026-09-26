@@ -13,8 +13,8 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Textarea } from '@/shared/ui/textarea';
 
 import useProductForm from '../hooks/useProductForm';
-import { getCategories, getCountries } from '../productsCatalog.processes';
-import { useProductsCatalogStore } from '../productsCatalog.store';
+import { getCategories, getCountries } from '../productsSingle.processes';
+import { useProductsSingleStore } from '../productsSingle.store';
 
 const productSchema = z.object({
   shortName: z.string().min(1, 'Обязательно для заполнения'),
@@ -57,7 +57,7 @@ const ProductForm = ({ loading, type, product, setOpen }) => {
 
   const { imagePreviewProduct, imageProduct, imageError, fileInputRef, updatePhoto, deletePhoto, selectImage, handleSubmit } =
     useProductForm(product, type, setOpen);
-  const { categories, countries } = useProductsCatalogStore(
+  const { categories, countries } = useProductsSingleStore(
     useShallow((state) => ({
       categories: state.categories,
       countries: state.countries,
