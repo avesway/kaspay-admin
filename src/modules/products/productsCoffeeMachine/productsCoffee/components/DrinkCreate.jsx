@@ -1,32 +1,33 @@
 import React, { useState } from 'react';
-import { Edit } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 import { Button } from '@/shared/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/ui/dialog';
 
-import CompositionForm from './CompositionForm';
+import DrinkForm from './DrinkForm';
 import { useProductsCoffeeStore } from '../productsCoffee.store';
 
-const CompositionUpdate = ({ composition }) => {
+const DrinkCreate = () => {
   const [open, setOpen] = useState(false);
   const loading = useProductsCoffeeStore((state) => state.loading);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="icon" className="h-8 w-8">
-          <Edit className="size-4" />
+        <Button className="gap-2">
+          <Plus className="h-4 w-4" />
+          Добавить напиток
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Редактировать напиток</DialogTitle>
-          <DialogDescription>Внесите изменения в рецепт напитка</DialogDescription>
+          <DialogTitle>Добавить напиток</DialogTitle>
+          <DialogDescription>Создайте напиток с указанием используемых ресурсов</DialogDescription>
         </DialogHeader>
-        <CompositionForm loading={loading.update} type="edit" composition={composition} setOpen={setOpen} />
+        <DrinkForm loading={loading.create} type="create" setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );
 };
 
-export default CompositionUpdate;
+export default DrinkCreate;

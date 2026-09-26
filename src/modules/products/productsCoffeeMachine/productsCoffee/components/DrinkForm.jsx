@@ -10,44 +10,58 @@ import { DialogClose, DialogFooter } from '@/shared/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
-import { Switch } from '@/shared/ui/switch';
 
 import { getProductUnitType, getUnitShort } from '../helpers/units';
-import useCompositionForm from '../hooks/useCompositionForm';
+import useDrinkForm from '../hooks/useDrinkForm';
 import { getIngredientProducts } from '../productsCoffee.processes';
 import { useProductsCoffeeStore } from '../productsCoffee.store';
 
-const compositionSchema = z.object({
-  name: z.string().min(1, 'Обязательно для заполнения').max(512, 'Максимум 512 символов'),
-  description: z.string().max(2048, 'Максимум 2048 символов'),
-  isActive: z.boolean(),
-  items: z.array(
-    z.object({
-      productId: z.string().min(1, 'Выберите ресурс'),
-      unitAmount: z.preprocess((val) => Number(val), z.number().int('Только целое число').min(1, 'Минимум 1')),
-    }),
-  ),
-});
+const drinkSchema = z
+  .object({
+    name: z.string().min(1, 'Обязательно для заполнения').max(512, 'Максимум 512 символов'),
+    shortName: z.string().min(1, 'Обязательно для заполнения'),
+    items: z
+      .array(
+        z.object({
+          productId: z.string().min(1, 'Выберите ресурс'),
+          unitAmount: z.preprocess((val) => Number(val), z.number().int('Только целое число').min(1, 'Минимум 1')),
+        }),
+      )
+      .min(1, 'Добавьте хотя бы один ресурс'),
+  })
+  .superRefine((data, ctx) => {
+    const seen = new Set();
+    data.items.forEach((item, index) => {
+      if (!item.productId) return;
+      if (seen.has(item.productId)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [`items.${index}.productId`],
+          message: 'Этот ресурс уже добавлен',
+        });
+      }
+      seen.add(item.productId);
+    });
+  });
 
 const ITEM_GRID = 'grid grid-cols-[minmax(0,1fr)_150px_36px] items-start gap-3';
 
-const CompositionForm = ({ loading, type, composition, setOpen }) => {
+const DrinkForm = ({ loading, type, drink, setOpen }) => {
   const form = useForm({
-    resolver: zodResolver(compositionSchema),
+    resolver: zodResolver(drinkSchema),
     defaultValues: {
-      name: composition?.name || '',
-      description: composition?.description || '',
-      isActive: composition?.isActive ?? true,
-      items: composition?.items?.length
-        ? composition.items.map((item) => ({
-            productId: item.productId?.toString() || '',
+      name: drink?.name || '',
+      shortName: drink?.shortName || '',
+      items: drink?.composition?.items?.length
+        ? drink.composition.items.map((item) => ({
+            productId: item.product?.id?.toString() || '',
             unitAmount: item.unitAmount,
           }))
         : [{ productId: '', unitAmount: 1 }],
     },
   });
   const { fields, append, remove } = useFieldArray({ control: form.control, name: 'items' });
-  const { handleSubmit } = useCompositionForm(composition, type, setOpen);
+  const { handleSubmit } = useDrinkForm(drink, type, setOpen);
 
   const { ingredientProducts } = useProductsCoffeeStore(
     useShallow((state) => ({
@@ -86,12 +100,14 @@ const CompositionForm = ({ loading, type, composition, setOpen }) => {
           />
           <FormField
             control={form.control}
-            name="description"
+            name="shortName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Описание</FormLabel>
+                <FormLabel className="gap-1">
+                  Короткое название (отображение на терминале)<span className="text-destructive">*</span>
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder="классический" type="input" {...field} />
+                  <Input placeholder="Капучино" type="input" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -101,7 +117,7 @@ const CompositionForm = ({ loading, type, composition, setOpen }) => {
 
         <div className="flex flex-col gap-3">
           <FormLabel className="gap-1">
-            Ресурсы<span className="text-destructive">*</span>
+            Состав<span className="text-destructive">*</span>
           </FormLabel>
           <div className={`${ITEM_GRID} text-muted-foreground px-1 text-xs`}>
             <span>Ресурс</span>
@@ -166,30 +182,11 @@ const CompositionForm = ({ loading, type, composition, setOpen }) => {
               </Button>
             </div>
           ))}
-          <Button
-            type="button"
-            variant="outline"
-            className="self-start"
-            onClick={() => append({ productId: '', unitAmount: 1 })}
-          >
+          <Button type="button" variant="outline" className="self-start" onClick={() => append({ productId: '', unitAmount: 1 })}>
             <Plus className="h-4 w-4" />
             Добавить ресурс
           </Button>
         </div>
-
-        <FormField
-          control={form.control}
-          name="isActive"
-          render={({ field: { value, onChange } }) => (
-            <FormItem>
-              <FormLabel>Активен</FormLabel>
-              <FormControl>
-                <Switch checked={value} onCheckedChange={onChange} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
         <DialogFooter>
           <DialogClose asChild>
@@ -207,4 +204,4 @@ const CompositionForm = ({ loading, type, composition, setOpen }) => {
   );
 };
 
-export default CompositionForm;
+export default DrinkForm;

@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 
-import CompositionCreate from '../productsCoffee/components/CompositionCreate';
-import CompositionsList from '../productsCoffee/components/CompositionsList';
+import DrinkCreate from '../productsCoffee/components/DrinkCreate';
+import DrinksList from '../productsCoffee/components/DrinksList';
 import ProductCompositeCreate from '../productsComposite/components/ProductCompositeCreate';
 import ProductsCompositeList from '../productsComposite/components/ProductsCompositeList';
 
@@ -38,7 +38,7 @@ const ProductsCoffeeMachineSection = () => {
               <h2 className="text-xl font-semibold">Ресурсы для кофемашины</h2>
               <p className="text-muted-foreground text-[14px]">Кофе, молоко, стаканы и другие расходники</p>
             </div>
-            <ProductCompositeCreate purposeType="composite" purposeTypes="composite" />
+            <ProductCompositeCreate />
           </div>
           <ProductsCompositeList purposeTypes="composite" />
         </TabsContent>
@@ -49,9 +49,9 @@ const ProductsCoffeeMachineSection = () => {
               <h2 className="text-xl font-semibold">Напитки</h2>
               <p className="text-muted-foreground text-[14px]">Рецепты напитков с указанием используемых ресурсов</p>
             </div>
-            <CompositionCreate />
+            <DrinkCreate />
           </div>
-          <CompositionsList />
+          <DrinksList />
         </TabsContent>
       </Tabs>
     </>

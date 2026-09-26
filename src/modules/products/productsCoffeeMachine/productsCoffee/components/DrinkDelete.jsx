@@ -13,10 +13,10 @@ import {
   DialogTrigger,
 } from '@/shared/ui/dialog';
 
-import { deleteComposition } from '../productsCoffee.processes';
+import { deleteDrink } from '../productsCoffee.processes';
 import { useProductsCoffeeStore } from '../productsCoffee.store';
 
-const CompositionDelete = ({ composition }) => {
+const DrinkDelete = ({ drink }) => {
   const [open, setOpen] = useState(false);
   const loading = useProductsCoffeeStore((state) => state.loading);
 
@@ -29,9 +29,9 @@ const CompositionDelete = ({ composition }) => {
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Удалить рецепт?</DialogTitle>
+          <DialogTitle>Удалить напиток?</DialogTitle>
           <DialogDescription>
-            {`Вы действительно хотите удалить рецепт напитка ${composition.name}? Это действие нельзя отменить.`}
+            {`Вы действительно хотите удалить напиток ${drink.name}? Это действие нельзя отменить.`}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="mt-5 sm:justify-start">
@@ -44,7 +44,7 @@ const CompositionDelete = ({ composition }) => {
             variant="destructive"
             disabled={loading.delete}
             className="ml-auto"
-            onClick={() => deleteComposition(composition.id, setOpen)}
+            onClick={() => deleteDrink(drink.id, setOpen)}
           >
             Удалить
             {loading.delete && <Loader2 className="animate-spin" />}
@@ -55,4 +55,4 @@ const CompositionDelete = ({ composition }) => {
   );
 };
 
-export default CompositionDelete;
+export default DrinkDelete;

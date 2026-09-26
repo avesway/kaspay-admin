@@ -31,8 +31,8 @@ export function setPaginationProductsComposite(size, page) {
   getProductsComposite(purposeTypes);
 }
 
-export async function createProductComposite(data, purposeTypes, setOpen, imageProduct) {
-  const { setLoading } = useProductsCompositeStore.getState();
+export async function createProductComposite(data, setOpen, imageProduct) {
+  const { setLoading, purposeTypes } = useProductsCompositeStore.getState();
   setLoading({ create: true });
 
   const product = await productsCompositeAPI
@@ -53,4 +53,55 @@ export async function createProductComposite(data, purposeTypes, setOpen, imageP
     });
 
   return product;
+}
+
+export async function updateProductComposite(productId, data, setOpen, imageProduct) {
+  const { setLoading, purposeTypes } = useProductsCompositeStore.getState();
+  setLoading({ update: true });
+
+  const product = await productsCompositeAPI
+    .updateProduct(productId, data)
+    .then(async (res) => {
+      if (imageProduct) await createImageProduct(res.id, imageProduct);
+      await getProductsComposite(purposeTypes);
+      toast.success('Товар успешно изменен', { position: 'top-center' });
+      return res;
+    })
+    .catch(() => {
+      toast.error('Ошибка изменения товара', { position: 'top-center' });
+      return null;
+    })
+    .finally(() => {
+      setLoading({ update: false });
+      setOpen(false);
+    });
+
+  return product;
+}
+
+export async function deleteProductComposite(productId, setOpen) {
+  const { setLoading, purposeTypes } = useProductsCompositeStore.getState();
+  setLoading({ delete: true });
+
+  await productsCompositeAPI
+    .deleteProduct(productId)
+    .then(async () => {
+      await getProductsComposite(purposeTypes);
+      toast.success('Товар успешно удален', { position: 'top-center' });
+    })
+    .catch(() => {
+      toast.error('Ошибка удаления товара', { position: 'top-center' });
+    })
+    .finally(() => {
+      setLoading({ delete: false });
+      setOpen(false);
+    });
+}
+
+export async function getUnitTypes() {
+  const { setUnitTypes } = useProductsCompositeStore.getState();
+  await productsCompositeAPI
+    .getUnitTypes()
+    .then((res) => setUnitTypes(res))
+    .catch(() => {});
 }

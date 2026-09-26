@@ -6,6 +6,8 @@ import AppTable from '@/shared/AppTable';
 import Pagination from '@/shared/Pagination';
 import { Card, CardContent, CardHeader } from '@/shared/ui/card';
 
+import ProductCompositeDelete from './ProductCompositeDelete';
+import ProductCompositeUpdate from './ProductCompositeUpdate';
 import ProductImageCell from '../../../productsSingle/catalog/components/ProductImageCell';
 import { getProductsComposite, setPaginationProductsComposite } from '../productsComposite.processes';
 import { useProductsCompositeStore } from '../productsComposite.store';
@@ -52,6 +54,21 @@ const ProductsCompositeList = ({ purposeTypes }) => {
         >
           {getValue()}
         </span>
+      ),
+    },
+    {
+      accessorKey: 'unitType',
+      header: 'Ед. изм.',
+      cell: ({ row }) => <span className="text-sm">{row.original.unitType?.description || '—'}</span>,
+    },
+    {
+      id: 'actions',
+      header: 'Действия',
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          <ProductCompositeUpdate product={row.original} />
+          <ProductCompositeDelete product={row.original} />
+        </div>
       ),
     },
   ];

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 export const useProductsCoffeeStore = create((set, get) => ({
-  compositions: [],
+  drinks: [],
   ingredientProducts: [],
   loading: {
     list: false,
@@ -10,7 +10,7 @@ export const useProductsCoffeeStore = create((set, get) => ({
     delete: false,
   },
 
-  setCompositions: (compositions) => set({ compositions }),
+  setDrinks: (drinks) => set({ drinks }),
   setIngredientProducts: (ingredientProducts) => set({ ingredientProducts }),
   setLoading: (data) => set({ loading: { ...get().loading, ...data } }),
 }));

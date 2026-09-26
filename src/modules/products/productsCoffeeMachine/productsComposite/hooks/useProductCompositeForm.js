@@ -1,11 +1,14 @@
 import useProductImage from '../../../productsSingle/catalog/hooks/useProductImage';
-import { createProductComposite } from '../productsComposite.processes';
+import { createProductComposite, updateProductComposite } from '../productsComposite.processes';
 
-const useProductCompositeForm = (product, type, purposeType, purposeTypes, setOpen) => {
+const useProductCompositeForm = (product, type, setOpen) => {
   const imageState = useProductImage(product);
 
   const handleSubmit = async (data) => {
-    if (type === 'create') await createProductComposite({ ...data, purposeType }, purposeTypes, setOpen, imageState.imageProduct);
+    if (type === 'create') {
+      await createProductComposite({ ...data, purposeType: 'composite' }, setOpen, imageState.imageProduct);
+    }
+    if (type === 'edit') await updateProductComposite(product.id, data, setOpen, imageState.imageProduct);
   };
 
   return { ...imageState, handleSubmit };

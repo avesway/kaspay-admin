@@ -14,16 +14,19 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { getCategories } from '../../../productsSingle/catalog/productsSingle.processes';
 import { useProductsSingleStore } from '../../../productsSingle/catalog/productsSingle.store';
 import useProductCompositeForm from '../hooks/useProductCompositeForm';
+import { getUnitTypes } from '../productsComposite.processes';
+import { useProductsCompositeStore } from '../productsComposite.store';
 
 const productSchema = z.object({
   shortName: z.string().min(1, 'Обязательно для заполнения'),
   barcode: z.string().min(1, 'Обязательно для заполнения'),
   name: z.string().min(1, 'Обязательно для заполнения'),
   categoryId: z.preprocess((val) => Number(val), z.number().min(1, 'Укажите категорию')),
-  weight: z.preprocess((val) => Number(val), z.number().min(1, { message: 'Вес должен быть минимум 1' })),
+  quantity: z.preprocess((val) => Number(val), z.number().min(1, 'Количество должно быть минимум 1')),
+  unitType: z.string().min(1, 'Укажите единицу измерения'),
 });
 
-const ProductCompositeForm = ({ loading, type, product, purposeType, purposeTypes, setOpen }) => {
+const ProductCompositeForm = ({ loading, type, product, setOpen }) => {
   const form = useForm({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -31,20 +34,27 @@ const ProductCompositeForm = ({ loading, type, product, purposeType, purposeType
       barcode: product?.barcode || '',
       name: product?.name || '',
       categoryId: product?.category?.id.toString() || '',
-      weight: product?.weight || '',
+      quantity: product?.quantity || '',
+      unitType: product?.unitType?.name || '',
     },
   });
 
   const { imagePreviewProduct, imageProduct, imageError, fileInputRef, updatePhoto, deletePhoto, selectImage, handleSubmit } =
-    useProductCompositeForm(product, type, purposeType, purposeTypes, setOpen);
+    useProductCompositeForm(product, type, setOpen);
   const { categories } = useProductsSingleStore(
     useShallow((state) => ({
       categories: state.categories,
     })),
   );
+  const { unitTypes } = useProductsCompositeStore(
+    useShallow((state) => ({
+      unitTypes: state.unitTypes,
+    })),
+  );
 
   useEffect(() => {
     getCategories();
+    getUnitTypes();
   }, []);
 
   return (
@@ -56,10 +66,10 @@ const ProductCompositeForm = ({ loading, type, product, purposeType, purposeType
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className="gap-1">
-                Полное название (как в накладной)<span className="text-destructive">*</span>
+                Название (как в накладной)<span className="text-destructive">*</span>
               </FormLabel>
               <FormControl>
-                <Input placeholder="Кофе зерно Arabica 1кг" type="input" {...field} />
+                <Input placeholder="Молоко 3.2% простоквашино 1л" type="input" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -75,7 +85,7 @@ const ProductCompositeForm = ({ loading, type, product, purposeType, purposeType
                   Короткое название (отображение на терминале)<span className="text-destructive">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="Кофе зерно" type="input" {...field} />
+                  <Input placeholder="Молоко 3.2%" type="input" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -97,7 +107,7 @@ const ProductCompositeForm = ({ loading, type, product, purposeType, purposeType
             )}
           />
         </div>
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-3 gap-5">
           <FormField
             control={form.control}
             name="categoryId"
@@ -128,16 +138,44 @@ const ProductCompositeForm = ({ loading, type, product, purposeType, purposeType
           />
           <FormField
             control={form.control}
-            name="weight"
+            name="quantity"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="gap-1">
-                  Вес (гр)<span className="text-destructive">*</span>
+                  Количество<span className="text-destructive">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="500" type="number" {...field} />
+                  <Input placeholder="200" type="number" {...field} />
                 </FormControl>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="unitType"
+            render={({ field: { onChange, value } }) => (
+              <FormItem>
+                <Select value={value} onValueChange={onChange}>
+                  <FormLabel className="gap-1">
+                    Единица измерения<span className="text-destructive">*</span>
+                  </FormLabel>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Выберите единицу измерения">
+                      {value && unitTypes.find((unit) => unit.name === value)?.description}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {unitTypes.map((unit) => (
+                        <SelectItem key={unit.name} value={unit.name}>
+                          {unit.description}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                  <FormMessage />
+                </Select>
               </FormItem>
             )}
           />
