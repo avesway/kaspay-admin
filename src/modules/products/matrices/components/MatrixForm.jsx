@@ -22,12 +22,13 @@ const templateSchema = z.object({
 
 const MatrixForm = ({ isUpdate, matrixId }) => {
   const navigate = useNavigate();
-  const { typesMatrices, error, loading, activeMatrix } = useMatricesStore(
+  const { typesMatrices, error, loading, activeMatrix, setActiveMatrixType } = useMatricesStore(
     useShallow((state) => ({
       typesMatrices: state.typesMatrices,
       error: state.error,
       loading: state.loading,
       activeMatrix: state.activeMatrix,
+      setActiveMatrixType: state.setActiveMatrixType,
     })),
   );
   const form = useForm({
@@ -43,6 +44,7 @@ const MatrixForm = ({ isUpdate, matrixId }) => {
       name: activeMatrix?.name || '',
       type: activeMatrix?.type || '',
     });
+    setActiveMatrixType(activeMatrix?.type || '');
   }, [activeMatrix]);
 
   return (
@@ -78,7 +80,14 @@ const MatrixForm = ({ isUpdate, matrixId }) => {
                 render={({ field: { onChange, value } }) => {
                   return (
                     <FormItem>
-                      <Select value={value} onValueChange={onChange} disabled={Boolean(activeMatrix?.type)}>
+                      <Select
+                        value={value}
+                        onValueChange={(selected) => {
+                          onChange(selected);
+                          setActiveMatrixType(selected);
+                        }}
+                        disabled={Boolean(activeMatrix?.type)}
+                      >
                         <FormLabel className="gap-1">
                           Тип<span className="text-destructive">*</span>
                         </FormLabel>

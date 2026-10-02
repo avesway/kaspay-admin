@@ -21,7 +21,7 @@ const productSchema = z.object({
   barcode: z.string().min(1, 'Обязательно для заполнения'),
   name: z.string().min(1, 'Обязательно для заполнения'),
   categoryId: z.preprocess((val) => Number(val), z.number().min(1, 'Укажите категорию')),
-  weight: z.preprocess((val) => Number(val), z.number().min(1, { message: 'Вес должен быть минимум 1' })),
+  quantity: z.preprocess((val) => Number(val), z.number().min(1, { message: 'Вес должен быть минимум 1' })),
   countryCode: z.string().min(1, 'Укажите страну'),
   ingredients: z.string().min(1, 'Обязательно для заполнения'),
   macronutrients: z.object({
@@ -43,7 +43,7 @@ const ProductForm = ({ loading, type, product, setOpen }) => {
       barcode: product?.barcode || '',
       name: product?.name || '',
       categoryId: product?.category?.id.toString() || '',
-      weight: product?.weight || '',
+      quantity: product?.quantity || '',
       countryCode: product?.country?.code || 'BLR',
       ingredients: product?.ingredients || '',
       macronutrients: {
@@ -150,7 +150,7 @@ const ProductForm = ({ loading, type, product, setOpen }) => {
           />
           <FormField
             control={form.control}
-            name="weight"
+            name="quantity"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="gap-1">

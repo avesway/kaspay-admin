@@ -1,87 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { format } from 'date-fns';
 import { AlertTriangle, CircleAlert, Loader2, Package, PackageX, Store, TrendingDown, Warehouse } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 
-import SalePointsTable from '@/modules/salePoints/components/SalePointsTable';
-import AppTable from '@/shared/AppTable';
 import Pagination from '@/shared/Pagination';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 
-import StorageBalanceOperationProduct from '../../../storages/components/StorageBalanceOperationProduct';
-import StorageDeviceMovingProduct from '../../../storages/components/StorageDeviceMovingProduct';
-import StorageMovingProduct from '../../../storages/components/StorageMovingProduct';
-import { getProductsBalances, setPaginationProductsBalances } from '../productsBalances.processes';
+import ProductsBalancesTable from './ProductsBalancesTable';
+import SalePointsTerminals from './SalePointsTerminals';
+import { getProductsBalancesView, setPaginationProductsBalancesView } from '../productsBalances.processes';
 import { useProductsBalancesStore } from '../productsBalances.store';
-
-const columnsProducts = [
-  {
-    accessorKey: 'product.name',
-    header: 'Наименование товара',
-  },
-  {
-    accessorKey: 'storageAmount.storage.name',
-    header: 'Склад',
-  },
-  {
-    accessorKey: 'delivery.waybillNumber',
-    header: 'Накладная',
-  },
-  {
-    accessorKey: 'delivery.deliveryDate',
-    header: 'Дата накладной',
-    cell: ({ getValue }) => <span className="text-sm">{getValue()}</span>,
-  },
-  {
-    accessorKey: 'storageAmount.quantity',
-    header: 'Остаток',
-  },
-  {
-    accessorKey: 'delivery',
-    header: 'Окончание срока годности',
-    cell: ({ getValue }) =>
-      getValue()?.productionAttributes?.expiredAt ? (
-        <span className="text-sm">{format(getValue()?.productionAttributes?.expiredAt, 'dd.MM.yyyy HH:mm')}</span>
-      ) : (
-        '-'
-      ),
-  },
-];
-
-const columnsProductsMain = [
-  ...columnsProducts,
-  {
-    id: 'actions',
-    header: 'Действия',
-    cell: ({ row }) => {
-      const product = row.original;
-      return (
-        <div className="flex flex-row gap-3">
-          <StorageMovingProduct product={product} />
-          <StorageDeviceMovingProduct product={product} />
-          <StorageBalanceOperationProduct product={product} />
-        </div>
-      );
-    },
-  },
-];
-
-const columnsProductsSalePoint = [
-  ...columnsProducts,
-  {
-    id: 'actions',
-    header: 'Действия',
-    cell: ({ row }) => {
-      const product = row.original;
-      return (
-        <div className="flex flex-row gap-3">
-          <StorageDeviceMovingProduct product={product} />
-        </div>
-      );
-    },
-  },
-];
 
 const tabs = [
   {
@@ -93,7 +21,6 @@ const tabs = [
     nameTable: 'Основной склад',
     storageTypes: ['warehouse'],
     balanceTypes: 'inStock',
-    columnsTable: columnsProductsMain,
   },
   {
     id: 2,
@@ -104,7 +31,6 @@ const tabs = [
     nameTable: 'Мини склад',
     storageTypes: ['salePoint'],
     balanceTypes: 'inStock',
-    columnsTable: columnsProductsSalePoint,
   },
   {
     id: 3,
@@ -126,7 +52,6 @@ const tabs = [
     nameTable: 'Просроченный товар',
     storageTypes: ['warehouse'],
     balanceTypes: 'expiration',
-    columnsTable: columnsProducts,
   },
   {
     id: 5,
@@ -137,7 +62,6 @@ const tabs = [
     nameTable: 'Списание по причине хищения',
     storageTypes: ['warehouse'],
     balanceTypes: 'theft',
-    columnsTable: columnsProducts,
   },
   {
     id: 6,
@@ -148,17 +72,16 @@ const tabs = [
     nameTable: 'Товар с повреждённой упаковкой',
     storageTypes: ['warehouse'],
     balanceTypes: 'damage',
-    columnsTable: columnsProducts,
   },
 ];
 
 const ProductsBalances = () => {
   const [activeTab, setActiveTab] = useState('warehouse');
   const [contentTab, setContentTab] = useState(tabs.find((i) => i.tab === 'warehouse'));
-  const { pagination, productsBalances, loading, error, setParamsRequest } = useProductsBalancesStore(
+  const { pagination, productsBalancesView, loading, error, setParamsRequest } = useProductsBalancesStore(
     useShallow((state) => ({
       pagination: state.pagination,
-      productsBalances: state.productsBalances,
+      productsBalancesView: state.productsBalancesView,
       loading: state.loading,
       error: state.error,
       setParamsRequest: state.setParamsRequest,
@@ -170,7 +93,7 @@ const ProductsBalances = () => {
 
     const storageTypes = contentTab.storageTypes.map((item) => `storageTypes=${item}&`).join('');
     setParamsRequest(`${storageTypes}balanceTypes=${contentTab.balanceTypes}`);
-    getProductsBalances();
+    getProductsBalancesView();
   }, [contentTab]);
 
   return (
@@ -201,20 +124,20 @@ const ProductsBalances = () => {
             </CardHeader>
             <CardContent>
               {tab.table === 'salePoints' ? (
-                <SalePointsTable />
-              ) : loading.list ? (
+                <SalePointsTerminals />
+              ) : loading.listView ? (
                 <div className="mt-5 flex justify-center">
                   <Loader2 className="animate-spin" color="var(--color-primary)" />
                 </div>
-              ) : error.list ? (
+              ) : error.listView ? (
                 <div className="mt-5 flex justify-center gap-3">
                   <CircleAlert color="var(--color-destructive)" />
                   <p className="text-destructive">Ошибка получения продуктов</p>
                 </div>
               ) : (
                 <>
-                  <AppTable data={productsBalances} columns={tab.columnsTable} paginationRequest={pagination} />
-                  <Pagination pagination={pagination} setPagination={setPaginationProductsBalances} />
+                  <ProductsBalancesTable data={productsBalancesView} storageTab={contentTab?.tab} />
+                  <Pagination pagination={pagination} setPagination={setPaginationProductsBalancesView} />
                 </>
               )}
             </CardContent>

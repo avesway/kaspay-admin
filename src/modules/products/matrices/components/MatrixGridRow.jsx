@@ -35,6 +35,7 @@ const MatrixGridRow = ({ row, products, activeMatrixRows, setActiveMatrixRows, s
           rowId: rowId,
           columnId: obj.columns.length + 1,
           columnProductQuantity: 0,
+          positionId: '',
         });
 
       acc.push(obj);

@@ -29,8 +29,10 @@ export const useMatricesStore = create((set, get) => ({
     columnId: '',
     productId: '',
     productQuantity: '',
+    positionId: '',
   },
   activeMatrix: null,
+  activeMatrixType: '',
   activeMatrixRows: [],
   updatedMatrixRows: {
     originalColumns: [],
@@ -44,6 +46,7 @@ export const useMatricesStore = create((set, get) => ({
   setError: (data) => set({ error: { ...get().error, ...data } }),
   setPagination: (data) => set({ pagination: { ...get().pagination, ...data } }),
   setActiveMatrix: (data) => set({ activeMatrix: data }),
+  setActiveMatrixType: (data) => set({ activeMatrixType: data }),
   setActiveMatrixRows: (data) => set({ activeMatrixRows: data }),
   setUpdatedMatrixRows: (data) => set({ updatedMatrixRows: { ...get().updatedMatrixRows, ...data } }),
   setActiveColumn: (data) => set({ activeColumn: { ...get().activeColumn, ...data } }),

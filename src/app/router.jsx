@@ -92,6 +92,10 @@ export const router = createHashRouter([
                   },
                 ],
               },
+              {
+                path: ROUTES.MOVEMENT_TASKS,
+                lazy: () => import('@/modules/movementTasks/movementTasks.page'),
+              },
             ],
           },
         ],

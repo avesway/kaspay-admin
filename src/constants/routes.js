@@ -9,6 +9,7 @@ export const ROUTES = {
   SALE_REPORTS: '/sale-reports',
   SALE_POINTS: '/sale-points',
   REPORTS: '/reports',
+  MOVEMENT_TASKS: '/movement-tasks',
 };
 
 export const PAGE_TITLES = {
@@ -19,4 +20,5 @@ export const PAGE_TITLES = {
   [ROUTES.SALE_REPORTS]: 'Отчеты по продажам',
   [ROUTES.SALE_POINTS]: 'Объекты',
   [ROUTES.REPORTS]: 'Все отчеты',
+  [ROUTES.MOVEMENT_TASKS]: 'Задания сервисменам',
 };

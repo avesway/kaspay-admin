@@ -33,6 +33,7 @@ const MatrixGrid = ({ isUpdate }) => {
           rowId: activeMatrixRows.length + 1,
           columnId: i + 1,
           columnProductQuantity: 0,
+          positionId: '',
         };
       }),
     });

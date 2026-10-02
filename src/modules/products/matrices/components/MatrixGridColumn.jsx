@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/shared/ui/button';
 
 import ProductImageCell from '../../productsSingle/catalog/components/ProductImageCell';
+import { useMatricesStore } from '../matrices.store';
 
 const MatrixGridColumn = ({
   col,
@@ -17,6 +18,7 @@ const MatrixGridColumn = ({
   setActiveMatrixRows,
   activeMatrixRows,
 }) => {
+  const activeMatrixType = useMatricesStore((state) => state.activeMatrixType);
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: col.columnId,
   });
@@ -27,6 +29,7 @@ const MatrixGridColumn = ({
       columnId: column.columnId,
       productId: column.productId,
       productQuantity: column.columnProductQuantity,
+      positionId: column.positionId,
     });
     setOpenDialogProduct(true);
   }
@@ -87,6 +90,9 @@ const MatrixGridColumn = ({
               {products.find((i) => i.id === col.productId)?.name}
             </p>
             <span className="text-muted-foreground text-[9px]">макс: {col.columnProductQuantity}</span>
+            {activeMatrixType !== 'fridge' && col.positionId ? (
+              <span className="text-muted-foreground text-[9px]">Id позиции: {col.positionId}</span>
+            ) : null}
           </div>
         ) : (
           <Plus className="text-muted-foreground h-4 w-4" />

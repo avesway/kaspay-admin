@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 export const useProductsBalancesStore = create((set, get) => ({
   productsBalances: [],
+  productsBalancesView: [],
   productDeviceMatrixItems: [],
 
   paramsRequest: '',
@@ -14,6 +15,7 @@ export const useProductsBalancesStore = create((set, get) => ({
 
   loading: {
     list: false,
+    listView: false,
     update: false,
     create: false,
     delete: false,
@@ -21,10 +23,12 @@ export const useProductsBalancesStore = create((set, get) => ({
   },
   error: {
     list: false,
+    listView: false,
     productDeviceMatrixItems: false,
   },
 
   setProductsBalances: (productsBalances) => set({ productsBalances }),
+  setProductsBalancesView: (productsBalancesView) => set({ productsBalancesView }),
   setParamsRequest: (paramsRequest) => set({ paramsRequest }),
   setLoading: (data) => set({ loading: { ...get().loading, ...data } }),
   setError: (data) => set({ error: { ...get().error, ...data } }),

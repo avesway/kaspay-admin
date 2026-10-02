@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 
 import { priceRoundedKopecks } from '@/helpers/priceHelpers';
 import { productsBalancesAPI } from '@/modules/products/productsBalances/productsBalances.api';
-import { getProductsBalances } from '@/modules/products/productsBalances/productsBalances.processes';
+import { getProductsBalancesView } from '@/modules/products/productsBalances/productsBalances.processes';
 import { storagesAPI } from '@/modules/storages/storages.api';
 
 import { useStoragesStore } from './storages.store';
@@ -68,7 +68,7 @@ export async function productsBalancesMovemenets(productId, data, form, setOpen)
 
     await productsBalancesAPI.moving(productId, resultData);
 
-    getProductsBalances();
+    getProductsBalancesView();
     form.reset();
     setOpen(false);
 
@@ -135,7 +135,7 @@ export async function registerProducStorage(data, form, setOpen) {
     await storagesAPI
       .createDelivery(data)
       .then((res) => {
-        getProductsBalances();
+        getProductsBalancesView();
         form.reset();
         setOpen(false);
 

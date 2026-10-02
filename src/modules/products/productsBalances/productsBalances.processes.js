@@ -31,6 +31,32 @@ export function setPaginationProductsBalances(size, page) {
   getProductsBalances();
 }
 
+export async function getProductsBalancesView() {
+  const { setProductsBalancesView, setPagination, pagination, paramsRequest, setLoading, setError } =
+    useProductsBalancesStore.getState();
+
+  setLoading({ listView: true });
+
+  await productsBalancesAPI
+    .getView(`${paramsRequest ? `${paramsRequest}&` : ''}size=${pagination.size}&page=${pagination.page}`)
+    .then((res) => {
+      setProductsBalancesView(res.items);
+      setPagination({ totalItems: res.totalItems, totalPages: res.totalPages });
+      setError({ listView: false });
+    })
+    .catch(() => {
+      toast.error('Ошибка получения продуктов', { position: 'top-center' });
+      setError({ listView: true });
+    })
+    .finally(() => setLoading({ listView: false }));
+}
+
+export function setPaginationProductsBalancesView(size, page) {
+  const { setPagination } = useProductsBalancesStore.getState();
+  setPagination({ size, page });
+  getProductsBalancesView();
+}
+
 export async function updatePriceProductBalance(productId, data) {
   const { updateActiveProduct } = usePriceBaseStore.getState();
 

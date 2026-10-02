@@ -9,6 +9,8 @@ import * as z from 'zod';
 import { useShallow } from 'zustand/react/shallow';
 
 import { priceRoundedKopecks, priceRoundedRubles } from '@/helpers/priceHelpers';
+import { getUnitTypes } from '@/modules/products/productsCoffeeMachine/productsComposite/productsComposite.processes';
+import { useProductsCompositeStore } from '@/modules/products/productsCoffeeMachine/productsComposite/productsComposite.store';
 import { getProductsSingle } from '@/modules/products/productsSingle/catalog/productsSingle.processes';
 import { useProductsSingleStore } from '@/modules/products/productsSingle/catalog/productsSingle.store';
 import { storagesAPI } from '@/modules/storages/storages.api';
@@ -27,9 +29,16 @@ import { useStoragesStore } from '../storages.store';
 
 import 'react-time-picker/dist/TimePicker.css';
 
+const isCompositeProduct = (product) => product?.purposeType?.name === 'composite';
+
 const productItemSchema = z.object({
   productId: z.preprocess((val) => Number(val), z.number().min(1, { message: 'Выберите товар' })),
   quantity: z.preprocess((val) => Number(val), z.number().min(1, { message: 'Количество должно быть больше нуля' })),
+  unitAmount: z.preprocess(
+    (val) => (val === '' || val === null || val === undefined ? undefined : Number(val)),
+    z.number().optional(),
+  ),
+  unitAmountType: z.string().optional(),
   productionAttributes: z
     .object({
       producedAt: z.string().optional(),
@@ -88,6 +97,9 @@ const StorageRegisterProduct = () => {
   const [openDateProduction, setOpenDateProduction] = useState({});
   const [searchProduct, setSearchProduct] = useState('');
   const products = useProductsSingleStore((state) => state.products);
+  const { unitTypes } = useProductsCompositeStore(
+    useShallow((state) => ({ unitTypes: state.unitTypes })),
+  );
   const { suppliers, storages } = useStoragesStore(
     useShallow((state) => ({ suppliers: state.suppliers, storages: state.storages })),
   );
@@ -103,17 +115,20 @@ const StorageRegisterProduct = () => {
     },
   });
 
-  const { setValue, getValues } = form;
+  const { setValue, getValues, handleSubmit } = form;
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'products',
   });
 
+  const watchProducts = form.watch('products');
+
   useEffect(() => {
     if (open) {
       getListSuppliers();
       getProductsSingle();
+      getUnitTypes();
       if (!fields.length) handleAddRow();
     }
   }, [open]);
@@ -122,6 +137,8 @@ const StorageRegisterProduct = () => {
     append({
       productId: '',
       quantity: '',
+      unitAmount: '',
+      unitAmountType: '',
       productionAttributes: {
         producedAt: '',
         timeProduced: '',
@@ -168,6 +185,36 @@ const StorageRegisterProduct = () => {
     { value: '20', name: '20%' },
   ];
 
+  const onSubmit = handleSubmit((data) => {
+    let hasCompositeErrors = false;
+
+    const cleanedProducts = data.products.map((item, index) => {
+      const selectedProduct = products.find((product) => product.id == item.productId);
+
+      if (!isCompositeProduct(selectedProduct)) {
+        const { unitAmount, unitAmountType, ...rest } = item;
+
+        return rest;
+      }
+
+      if (!item.unitAmount || item.unitAmount < 1) {
+        form.setError(`products.${index}.unitAmount`, { type: 'manual', message: 'Укажите объём/вес единицы товара' });
+        hasCompositeErrors = true;
+      }
+
+      if (!item.unitAmountType) {
+        form.setError(`products.${index}.unitAmountType`, { type: 'manual', message: 'Выберите единицу измерения' });
+        hasCompositeErrors = true;
+      }
+
+      return item;
+    });
+
+    if (hasCompositeErrors) return;
+
+    registerProducStorage({ ...data, products: cleanedProducts }, form, setOpen);
+  });
+
   return (
     <>
       <Sheet open={open} onOpenChange={setOpen}>
@@ -184,10 +231,7 @@ const StorageRegisterProduct = () => {
           </SheetHeader>
 
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit((data) => registerProducStorage(data, form, setOpen))}
-              className="mt-5 flex flex-col gap-5 overflow-y-auto"
-            >
+            <form onSubmit={onSubmit} className="mt-5 flex flex-col gap-5 overflow-y-auto">
               <div className="grid grid-cols-4 gap-5">
                 <FormField
                   control={form.control}
@@ -308,8 +352,12 @@ const StorageRegisterProduct = () => {
                   <p className="text-muted-foreground py-4 text-center text-sm">Нажмите "Добавить товар" для добавления товара</p>
                 )}
 
-                {fields.map((field, index) => (
-                  <div key={field.id} className="border-border bg-card space-y-4 rounded-lg border p-4">
+                {fields.map((field, index) => {
+                  const selectedProduct = products.find((product) => product.id == watchProducts?.[index]?.productId);
+                  const isComposite = isCompositeProduct(selectedProduct);
+
+                  return (
+                    <div key={field.id} className="border-border bg-card space-y-4 rounded-lg border p-4">
                     <div className="flex flex-row flex-wrap gap-8">
                       <FormField
                         control={form.control}
@@ -438,6 +486,55 @@ const StorageRegisterProduct = () => {
                     </div>
 
                     <div className="mt-8 flex flex-row flex-wrap gap-8">
+                      {isComposite && (
+                        <>
+                          <FormField
+                            control={form.control}
+                            name={`products.${index}.unitAmount`}
+                            render={({ field }) => (
+                              <FormItem className="max-w-[10%] min-w-[8%]">
+                                <FormLabel className="gap-1">
+                                  Объём/вес единицы товара<span className="text-destructive">*</span>
+                                </FormLabel>
+                                <FormControl>
+                                  <Input placeholder="Объём/вес" type="number" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name={`products.${index}.unitAmountType`}
+                            render={({ field: { onChange, value } }) => (
+                              <FormItem className="max-w-[10%] min-w-[8%]">
+                                <Select value={value || ''} onValueChange={onChange}>
+                                  <FormLabel className="gap-1">
+                                    Единица измерения<span className="text-destructive">*</span>
+                                  </FormLabel>
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Выберите единицу">
+                                      {value && unitTypes.find((unit) => unit.name === value)?.description}
+                                    </SelectValue>
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectGroup>
+                                      {unitTypes.map((unit) => (
+                                        <SelectItem key={unit.name} value={unit.name}>
+                                          {unit.description}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectGroup>
+                                  </SelectContent>
+                                  <FormMessage />
+                                </Select>
+                              </FormItem>
+                            )}
+                          />
+                        </>
+                      )}
+
                       <FormField
                         control={form.control}
                         name={`products.${index}.quantity`}
@@ -567,7 +664,8 @@ const StorageRegisterProduct = () => {
                       />
                     </div>
                   </div>
-                ))}
+                  );
+                })}
 
                 <Button type="button" variant="outline" onClick={handleAddRow} className="gap-2">
                   <Plus className="h-4 w-4" />

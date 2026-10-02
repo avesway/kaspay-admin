@@ -18,14 +18,23 @@ import { useMatricesStore } from '../matrices.store';
 const matrixProductSchema = z.object({
   productId: z.preprocess((val) => Number(val), z.number().min(1, { message: 'Выберите товар' })),
   productQuantity: z.preprocess((val) => Number(val), z.number().min(1, { message: 'Количество должно быть больше нуля' })),
+  positionId: z.preprocess(
+    (val) => (val === '' || val === null ? undefined : Number(val)),
+    z
+      .number({ message: 'Id позиции должен быть числом' })
+      .int({ message: 'Id позиции должен быть целым числом' })
+      .min(1, { message: 'Id позиции должен быть больше нуля' })
+      .optional(),
+  ),
 });
 
 const MatrixProduct = ({ open, setOpen, isUpdate }) => {
   const products = useProductsSingleStore((state) => state.products);
-  const { activeColumn, activeMatrixRows, setActiveMatrixRows, error, setError } = useMatricesStore(
+  const { activeColumn, activeMatrixRows, activeMatrixType, setActiveMatrixRows, error, setError } = useMatricesStore(
     useShallow((state) => ({
       activeColumn: state.activeColumn,
       activeMatrixRows: state.activeMatrixRows,
+      activeMatrixType: state.activeMatrixType,
       setActiveMatrixRows: state.setActiveMatrixRows,
       error: state.error,
       setError: state.setError,
@@ -34,6 +43,8 @@ const MatrixProduct = ({ open, setOpen, isUpdate }) => {
   const [searchProduct, setSearchProduct] = useState('');
   const [isShowBtnCleanData, setShowBtnCleanData] = useState(false);
 
+  const isFridge = activeMatrixType === 'fridge';
+
   useEffect(() => {
     if (open) getProductsSingle();
   }, [open]);
@@ -41,6 +52,7 @@ const MatrixProduct = ({ open, setOpen, isUpdate }) => {
   useEffect(() => {
     setValue('productId', activeColumn?.productId ? activeColumn.productId : '');
     setValue('productQuantity', activeColumn?.productQuantity ? activeColumn?.productQuantity.toString() : '');
+    setValue('positionId', activeColumn?.positionId ? activeColumn.positionId.toString() : '');
 
     setShowBtnCleanData(Boolean(activeColumn?.productId));
   }, [activeColumn]);
@@ -50,6 +62,7 @@ const MatrixProduct = ({ open, setOpen, isUpdate }) => {
     defaultValues: {
       productId: '',
       productQuantity: '',
+      positionId: '',
     },
   });
 
@@ -73,6 +86,7 @@ const MatrixProduct = ({ open, setOpen, isUpdate }) => {
             ...column,
             productId: data.productId.toString(),
             columnProductQuantity: data.productQuantity,
+            positionId: data.positionId ?? '',
           };
         }),
       };
@@ -96,6 +110,7 @@ const MatrixProduct = ({ open, setOpen, isUpdate }) => {
             ...column,
             productId: '',
             columnProductQuantity: 0,
+            positionId: '',
           };
         }),
       };
@@ -184,6 +199,27 @@ const MatrixProduct = ({ open, setOpen, isUpdate }) => {
                 </FormItem>
               )}
             />
+
+            {!isFridge && (
+              <FormField
+                control={form.control}
+                name="positionId"
+                render={({ field: { onChange, value } }) => (
+                  <FormItem>
+                    <FormLabel className="gap-1">Id позиции</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Id позиции"
+                        type="number"
+                        value={value}
+                        onChange={({ target }) => onChange(target.value)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <DialogFooter className="mt-5 sm:justify-end">
               <DialogClose asChild>

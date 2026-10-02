@@ -5,6 +5,10 @@ export const productsBalancesAPI = {
     const response = await instanceAxios.get(`products/balances?${params}`);
     return response?.data;
   },
+  getView: async (params) => {
+    const response = await instanceAxios.get(`products/balances/view?${params}`);
+    return response?.data;
+  },
   savePrice: async (id, data) => {
     const response = await instanceAxios.patch(`products/balances/${id}`, data);
     return response?.data;
