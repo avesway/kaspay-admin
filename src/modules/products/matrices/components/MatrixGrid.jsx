@@ -58,8 +58,6 @@ const MatrixGrid = ({ isUpdate }) => {
     }, 100);
   }
 
-  console.log('activeMatrixRows GRID', activeMatrixRows);
-
   return (
     <>
       <Card className="w-[80%]">

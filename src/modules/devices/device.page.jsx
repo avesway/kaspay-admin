@@ -6,7 +6,7 @@ import { useShallow } from 'zustand/react/shallow';
 
 import { Button } from '@/shared/ui/button';
 
-import DeviceConnectPriceList from './components/DeviceConnectPriceList';
+import DeviceConnectMatrix from './components/DeviceConnectMatrix';
 import DeviceDetails from './components/DeviceDetails';
 import DeviceInfo from './components/DeviceInfo';
 import { getListDevices } from './device.processes';
@@ -45,7 +45,7 @@ function DevicePage() {
           {!activeTerminalDevice ? <Loader2 className="mx-1 animate-spin" /> : activeTerminalDevice.name} /{' '}
           {!activeControllerDevice ? <Loader2 className="mx-1 animate-spin" /> : activeControllerDevice.name}
         </h1>
-        <DeviceConnectPriceList />
+        <DeviceConnectMatrix />
       </div>
 
       <DeviceInfo />

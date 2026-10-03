@@ -110,7 +110,7 @@ const MatrixGridRow = ({ row, products, activeMatrixRows, setActiveMatrixRows, s
         </Button>
       </div>
       <div
-        className={cn(row.columns.length < 6 ? 'place-items-center' : '', 'space- mt-3 grid gap-1 rounded-lg p-2')}
+        className={cn(row.columns.length < 5 ? 'place-items-center' : '', 'space- mt-3 grid gap-1 rounded-lg p-2')}
         style={{
           gridTemplateColumns: `repeat(${row.columns.length}, minmax(0, 1fr ))`,
         }}

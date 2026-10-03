@@ -20,6 +20,21 @@ export async function getListStorages(params = '') {
     .finally(() => setLoading({ listStorages: false }));
 }
 
+export async function getListMovingStorages(params = '') {
+  const { setMovingStorages, setLoading, setError } = useStoragesStore.getState();
+
+  setLoading({ movingStorages: true });
+
+  await storagesAPI
+    .getListStorages(params)
+    .then((res) => {
+      setMovingStorages(res.items);
+      setError({ movingStorages: false });
+    })
+    .catch((err) => setError({ movingStorages: true }))
+    .finally(() => setLoading({ movingStorages: false }));
+}
+
 export async function getListDeliveries() {
   const { setDeliveries, setLoading, setError } = useStoragesStore.getState();
 

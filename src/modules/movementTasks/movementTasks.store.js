@@ -19,6 +19,7 @@ export const useMovementTasksStore = create((set, get) => ({
   loading: {
     list: false,
     types: false,
+    manual: false,
   },
   error: {
     list: false,

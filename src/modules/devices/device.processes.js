@@ -193,3 +193,120 @@ export function updateCommandsDeviceFilter(data) {
 
   getCommandsDevice();
 }
+
+async function refreshActiveDevices() {
+  const { activeTerminalDevice, activeControllerDevice } = useDevicesStore.getState();
+
+  if (!activeTerminalDevice?.id || !activeControllerDevice?.id) return;
+
+  await getListDevices(activeTerminalDevice.id, activeControllerDevice.id);
+}
+
+export async function getMatrixAttachPreview(deviceId, matrixId) {
+  const { setLoading } = useDevicesStore.getState();
+
+  try {
+    setLoading({ matrixPreview: true });
+
+    return await devicesAPI.attachMatrixPreview({ deviceId, matrixId });
+  } catch (error) {
+    toast.error(error?.response?.data?.message || 'Ошибка получения предпросмотра', { position: 'top-center' });
+    return null;
+  } finally {
+    setLoading({ matrixPreview: false });
+  }
+}
+
+export async function getMatrixReplacementPreview(linkId, matrixId) {
+  const { setLoading } = useDevicesStore.getState();
+
+  try {
+    setLoading({ matrixPreview: true });
+
+    return await devicesAPI.replaceMatrixPreview(linkId, { matrixId });
+  } catch (error) {
+    toast.error(error?.response?.data?.message || 'Ошибка получения предпросмотра', { position: 'top-center' });
+    return null;
+  } finally {
+    setLoading({ matrixPreview: false });
+  }
+}
+
+export async function attachMatrixToDevice(data) {
+  const { setLoading } = useDevicesStore.getState();
+
+  try {
+    setLoading({ matrixLink: true });
+
+    await devicesAPI.attachMatrix(data);
+    await refreshActiveDevices();
+
+    toast.success('Матрица успешно закреплена', { position: 'top-center' });
+    return true;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || 'Ошибка закрепления матрицы', { position: 'top-center' });
+    return false;
+  } finally {
+    setLoading({ matrixLink: false });
+  }
+}
+
+export async function replaceMatrixOnDevice(linkId, matrixId, priceListId = null) {
+  const { setLoading } = useDevicesStore.getState();
+
+  try {
+    setLoading({ matrixLink: true });
+
+    await devicesAPI.replaceMatrix(linkId, { matrixId });
+
+    if (priceListId) await devicesAPI.updateMatrixPriceList(linkId, { priceListId });
+
+    await refreshActiveDevices();
+
+    toast.success('Матрица успешно заменена', { position: 'top-center' });
+    return true;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || 'Ошибка замены матрицы', { position: 'top-center' });
+    return false;
+  } finally {
+    setLoading({ matrixLink: false });
+  }
+}
+
+export async function updateDevicePriceList(linkId, priceListId) {
+  const { setLoading } = useDevicesStore.getState();
+
+  try {
+    setLoading({ matrixLink: true });
+
+    await devicesAPI.updateMatrixPriceList(linkId, { priceListId });
+    await refreshActiveDevices();
+
+    toast.success('Прайс-лист успешно изменен', { position: 'top-center' });
+    return true;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || 'Ошибка изменения прайс-листа', { position: 'top-center' });
+    return false;
+  } finally {
+    setLoading({ matrixLink: false });
+  }
+}
+
+export async function detachMatrixFromDevice(linkId) {
+  const { setLoading } = useDevicesStore.getState();
+
+  try {
+    setLoading({ matrixDetach: true });
+
+    await devicesAPI.detachMatrix(linkId);
+    await refreshActiveDevices();
+
+    toast.success('Матрица успешно откреплена', { position: 'top-center' });
+    return true;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || 'Ошибка открепления матрицы', { position: 'top-center' });
+    return false;
+  } finally {
+    setLoading({ matrixDetach: false });
+  }
+}

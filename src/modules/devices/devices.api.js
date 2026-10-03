@@ -29,11 +29,27 @@ export const devicesAPI = {
     const response = await instanceAxios.post(`devices/commands`, data);
     return response?.data;
   },
-  connectPriceList: async (data) => {
+  attachMatrix: async (data) => {
     const response = await instanceAxios.post(`devices/device-product-matrix-price-lists`, data);
     return response?.data;
   },
-  removePriceList: async (id) => {
+  updateMatrixPriceList: async (linkId, data) => {
+    const response = await instanceAxios.put(`devices/device-product-matrix-price-lists/${linkId}`, data);
+    return response?.data;
+  },
+  attachMatrixPreview: async (data) => {
+    const response = await instanceAxios.post(`devices/device-product-matrix-price-lists/attach-preview`, data);
+    return response?.data;
+  },
+  replaceMatrixPreview: async (linkId, data) => {
+    const response = await instanceAxios.post(`devices/device-product-matrix-price-lists/${linkId}/replacement-preview`, data);
+    return response?.data;
+  },
+  replaceMatrix: async (linkId, data) => {
+    const response = await instanceAxios.post(`devices/device-product-matrix-price-lists/${linkId}/replacement`, data);
+    return response?.data;
+  },
+  detachMatrix: async (id) => {
     const response = await instanceAxios.delete(`devices/device-product-matrix-price-lists/${id}`);
     return response?.data;
   },

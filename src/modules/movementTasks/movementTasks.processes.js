@@ -1,6 +1,7 @@
 import { toast } from 'sonner';
 
 import { movementTasksAPI } from '@/modules/movementTasks/movementTasks.api';
+import { getProductsBalancesView } from '@/modules/products/productsBalances/productsBalances.processes';
 
 import { useMovementTasksStore } from './movementTasks.store';
 
@@ -22,8 +23,7 @@ export async function getMovementTaskTypes() {
 }
 
 export async function getMovementTasksList() {
-  const { setLoading, setError, setMovementTasks, setPagination, filter, pagination } =
-    useMovementTasksStore.getState();
+  const { setLoading, setError, setMovementTasks, setPagination, filter, pagination } = useMovementTasksStore.getState();
   setLoading({ list: true });
 
   await movementTasksAPI
@@ -56,4 +56,28 @@ export function updatePaginationMovementTasks(size, page) {
   setPagination({ size, page });
 
   getMovementTasksList();
+}
+
+export async function createMovementTaskManual(data, form, setOpen) {
+  const { setLoading } = useMovementTasksStore.getState();
+
+  try {
+    setLoading({ manual: true });
+
+    await movementTasksAPI.createManualMovementTask(data);
+
+    getProductsBalancesView();
+    form.reset();
+    setOpen(false);
+
+    toast.success('Задание на перемещение создано', { position: 'top-center' });
+  } catch (error) {
+    console.log('error', error);
+
+    toast.error(error?.response?.data?.message || 'Ошибка создания задания на перемещение', {
+      position: 'top-center',
+    });
+  } finally {
+    setLoading({ manual: false });
+  }
 }

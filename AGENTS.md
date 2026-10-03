@@ -60,6 +60,13 @@ src/
 6. **Именование**: компоненты PascalCase (`SalePointsList.jsx`), модульные файлы с точечными суффиксами (`salePoints.api.js`), дефолтный экспорт для компонентов, `ENV`/`ROUTES` — только из `src/constants`.
 7. **Деньги**: хранить/передавать в копейках — `priceHelpers.js`.
 
+## Домен перемещений (movement tasks)
+- Глобальный подход: любое перемещение товаров между складами/устройствами и изменение/добавление продуктов в матрице выполняет бэкенд через **задачи** (movement tasks) — фронтенд операции напрямую не делает. Эндпоинты: `GET /products/movement-tasks`, `POST /products/movement-tasks/manual`; список задач — страница «Задания» (модуль `movementTasks`). Старый синхронный `POST products/balances/{id}/movemenets` — легаси.
+- Семантика полей перемещения (не путать):
+  - `type: load` — товар **загружается** на склад (сторона назначения); `loadStorageId` — склад, **на который** загружают товар.
+  - `type: unload` — товар **разгружается** со склада (сторона источника); `unloadStorageId` — склад, **с которого** разгружают.
+  - Перемещение на damage | theft | expiration (просрочка/воровство/брак) — это разгрузка со склада-источника: позиция с `type: unload` + `dispositionType`; при этом `loadStorageId` и `unloadStorageId` передаются оба и совпадают — оба равны складу-источнику.
+
 ## Скрипты
 - `npm run dev` — vite в mode=test; `npm run build`; `deployTest`/`deployProd` — build + scp на сервер.
 - Линт: ESLint 9 flat config (`eslint.config.js`), сортировка импортов `simple-import-sort`; Prettier c `prettier-plugin-tailwindcss`.

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AlertTriangle, ArrowUpDown, Package, PackageX, Store, TrendingDown, Warehouse } from 'lucide-react';
 
 import { Button } from '@/shared/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
+
+import StorageBalanceMovingTask from './StorageBalanceMovingTask';
 
 const movingTargetsByStorage = {
   warehouse: [
@@ -35,33 +37,45 @@ export function getMovingTargets(storageTab) {
   return movingTargetsByStorage[storageTab] ?? [];
 }
 
-const StorageBalanceMovingProduct = ({ balance, storageTab }) => {
+const StorageBalanceMovingProduct = ({ balance, product, storageTab, deviceId, sourceName }) => {
   const movingTargets = getMovingTargets(storageTab);
-
-  const onMoving = (target) => {
-    // Логика перемещения баланса будет подключена отдельной задачей
-  };
+  const [movingTarget, setMovingTarget] = useState(null);
 
   if (!movingTargets.length) return null;
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="">
-          <ArrowUpDown className="h-4 w-4" />
-          Перемещение
-        </Button>
-      </DropdownMenuTrigger>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" className="">
+            <ArrowUpDown className="h-4 w-4" />
+            Перемещение
+          </Button>
+        </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end">
-        {movingTargets.map((target) => (
-          <DropdownMenuItem key={target.type} onClick={() => onMoving(target)}>
-            <target.icon className={`h-4 w-4 ${target.iconClassName}`} />
-            {target.name}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+        <DropdownMenuContent align="end">
+          {movingTargets.map((target) => (
+            <DropdownMenuItem key={target.type} onClick={() => setMovingTarget(target)}>
+              <target.icon className={`h-4 w-4 ${target.iconClassName}`} />
+              {target.name}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {movingTarget ? (
+        <StorageBalanceMovingTask
+          open
+          onClose={() => setMovingTarget(null)}
+          balance={balance}
+          product={product}
+          target={movingTarget}
+          storageTab={storageTab}
+          deviceId={deviceId}
+          sourceName={sourceName}
+        />
+      ) : null}
+    </>
   );
 };
 

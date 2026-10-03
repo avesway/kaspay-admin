@@ -147,7 +147,12 @@ const SalePointsTerminals = () => {
         </div>
       ) : (
         <>
-          <ProductsBalancesTable data={productsBalancesView} storageTab="device" />
+          <ProductsBalancesTable
+            data={productsBalancesView}
+            storageTab="device"
+            deviceId={selectedTerminal.id}
+            sourceName={selectedTerminal.name}
+          />
           <Pagination pagination={pagination} setPagination={setPaginationProductsBalancesView} />
         </>
       )}

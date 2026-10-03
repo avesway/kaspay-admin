@@ -29,7 +29,7 @@ const BalanceExpirationCell = ({ balance }) => {
   );
 };
 
-const ProductsBalancesTable = ({ data = [], storageTab }) => {
+const ProductsBalancesTable = ({ data = [], storageTab, deviceId, sourceName }) => {
   const [expandedIds, setExpandedIds] = useState([]);
   const hasActions = getMovingTargets(storageTab).length > 0;
 
@@ -111,7 +111,13 @@ const ProductsBalancesTable = ({ data = [], storageTab }) => {
                     </TableCell>
                     {hasActions && (
                       <TableCell>
-                        <StorageBalanceMovingProduct balance={balance} storageTab={storageTab} />
+                        <StorageBalanceMovingProduct
+                          balance={balance}
+                          product={product}
+                          storageTab={storageTab}
+                          deviceId={deviceId}
+                          sourceName={sourceName}
+                        />
                       </TableCell>
                     )}
                   </TableRow>

@@ -43,6 +43,9 @@ export const useDevicesStore = create((set, get) => ({
     sendCommand: false,
     deviceControllerLatchMode: false,
     deviceControllerFirmware: false,
+    matrixPreview: false,
+    matrixLink: false,
+    matrixDetach: false,
   },
   error: {
     list: false,

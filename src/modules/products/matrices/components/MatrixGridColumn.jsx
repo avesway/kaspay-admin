@@ -75,7 +75,7 @@ const MatrixGridColumn = ({
 
       <div
         className={cn(
-          row.columns.length < 6 ? 'h-48 w-48 max-w-48' : 'aspect-square',
+          row.columns.length < 5 ? 'h-48 w-48 max-w-48' : 'aspect-square',
           'border-border bg-background hover:bg-accent hover:border-primary flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 p-2 text-center transition-all',
         )}
         onClick={() => selectProductColumn(row.row, col)}
